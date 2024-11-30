@@ -14,6 +14,7 @@ import ProjectsList from './modules/projects/components/ProjectsList/ProjectsLis
 import AuthLayout from './modules/shared/components/AuthLayout/AuthLayout';
 import MasterLayout from './modules/shared/components/MasterLayout/MasterLayout';
 import NotFound from './modules/shared/components/NotFound/NotFound';
+import ProtectedRoute from './modules/shared/components/ProtectedRoute/ProtectedRoute';
 import TasksList from './modules/tasks/components/TasksList/TasksList';
 import UsersList from './modules/users/components/UsersList/UsersList';
 
@@ -35,7 +36,11 @@ function App() {
     },
     {
       path: '',
-      element: <MasterLayout />,
+      element: (
+        <ProtectedRoute>
+          <MasterLayout />
+        </ProtectedRoute>
+      ),
       errorElement: <NotFound />,
       children: [
         { index: true, element: <Dashboard /> },

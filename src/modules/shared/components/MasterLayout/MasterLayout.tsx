@@ -10,7 +10,7 @@ export default function MasterLayout() {
           <Navbar />
         </div>
         <div className="flex">
-          <div className="w-[25%]">
+          <div className="">
             <SideBar />
           </div>
           <div className="w-full">

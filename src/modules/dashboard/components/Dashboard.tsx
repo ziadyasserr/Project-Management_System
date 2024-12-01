@@ -7,13 +7,10 @@ import { GoProjectSymlink } from 'react-icons/go';
 import header from '../../../assets/header.png';
 import { AuthContext } from '../../../context/AuthContext/AuthContext';
 
-import { Link } from "react-router-dom";
-
 export default function Dashboard() {
   const { loginData } = useContext(AuthContext);
 
   return (
-
     <>
       <header
         className="relative bg-cover bg-center  text-white flex items-center h-[280px] rounded-3xl overflow-hidden"
@@ -38,8 +35,10 @@ export default function Dashboard() {
 
       <div className="grid md:grid-cols-8 grid-cols-2 mt-10 gap-10 ">
         <div className="md:col-span-4 col-span-2 bg-[#F8F9FB] p-6 rounded-2xl ">
-          <div className=' border-l-4  border-primary '>
-            <span className="block font-semibold tracking-wide ms-5">Tasks</span>
+          <div className=" border-l-4  border-primary ">
+            <span className="block font-semibold tracking-wide ms-5">
+              Tasks
+            </span>
             <span className="block text-gray-500 ms-5">
               Lorem ipsum dolor sit amet,consecteture
             </span>
@@ -75,8 +74,10 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="md:col-span-4  col-span-2 bg-[#F8F9FB] p-6 rounded-2xl ">
-          <div className='border-l-4  border-primary'>
-            <span className="block font-semibold tracking-wide ms-5">Users</span>
+          <div className="border-l-4  border-primary">
+            <span className="block font-semibold tracking-wide ms-5">
+              Users
+            </span>
             <span className="block text-gray-500 ms-5">
               Lorem ipsum dolor sit amet,consecteture
             </span>
@@ -105,8 +106,4 @@ export default function Dashboard() {
       </div>
     </>
   );
-
-
-  )
-
 }

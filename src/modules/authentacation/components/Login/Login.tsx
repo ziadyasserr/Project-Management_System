@@ -81,7 +81,7 @@ export default function Login() {
                 onClick={() => setIsPasswordVisable((prev) => !prev)}
                 className=" outline-none"
               >
-                {isPasswordVisable ? <IoEyeOutline /> : <FaRegEyeSlash />}
+                {isPasswordVisable ? <IoEyeOutline />  : <FaRegEyeSlash />}
               </button>
             </div>
             {errors?.password && (

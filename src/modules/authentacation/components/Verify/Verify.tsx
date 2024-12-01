@@ -71,20 +71,20 @@ export default function Verify() {
             )}
           </div>
           <div className="text-center py-8">
-            <button
-              className="text-white bg-primary hover:bg-primary_hover w-full rounded-3xl py-2 font-semibold tracking-wide flex justify-center items-center"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <FaSpinner className="animate-spin mr-2" />
-                 Send ...
-                </>
-              ) : (
-                'Send'
-              )}
-            </button>
-          </div>
+          <button
+            className="text-white bg-primary hover:bg-primary_hover w-full rounded-3xl py-2 font-semibold tracking-wide flex justify-center items-center"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <FaSpinner className="animate-spin mr-2" />
+                Verifying ...
+              </>
+            ) : (
+              'Verify'
+            )}
+          </button>
+        </div>
         </form>
       </div>
     </>

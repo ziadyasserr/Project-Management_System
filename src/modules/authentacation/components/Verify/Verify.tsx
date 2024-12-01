@@ -1,28 +1,26 @@
 import { useForm } from 'react-hook-form';
 import { FaSpinner } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
   axiosInstance,
   USERS_URLS,
 } from '../../../../services/apisUrls/apisUrls';
-import {
-  EMAIL_VALIDATION,
-} from '../../../../services/validation/validation';
+import { EMAIL_VALIDATION } from '../../../../services/validation/validation';
 
 interface verifyData {
-  email: string,
-  code: string
+  email: string;
+  code: string;
 }
 
 export default function Verify() {
-
+  const location = useLocation();
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm({ defaultValues: { email: location.state } });
 
   const onSubmit = async (data: verifyData) => {
     // console.log(data);
@@ -71,20 +69,20 @@ export default function Verify() {
             )}
           </div>
           <div className="text-center py-8">
-          <button
-            className="text-white bg-primary hover:bg-primary_hover w-full rounded-3xl py-2 font-semibold tracking-wide flex justify-center items-center"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <>
-                <FaSpinner className="animate-spin mr-2" />
-                Verifying ...
-              </>
-            ) : (
-              'Verify'
-            )}
-          </button>
-        </div>
+            <button
+              className="text-white bg-primary hover:bg-primary_hover w-full rounded-3xl py-2 font-semibold tracking-wide flex justify-center items-center"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <FaSpinner className="animate-spin mr-2" />
+                  Verifying ...
+                </>
+              ) : (
+                'Verify'
+              )}
+            </button>
+          </div>
         </form>
       </div>
     </>

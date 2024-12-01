@@ -7,7 +7,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 
 
-import { FaEyeSlash, FaRegEye, FaSpinner } from 'react-icons/fa'
+import { FaEyeSlash, FaRegEye, FaRegEyeSlash, FaSpinner } from 'react-icons/fa'
+import { IoEyeOutline } from 'react-icons/io5'
 
 
 interface FormInputs {
@@ -20,8 +21,8 @@ interface FormInputs {
 
 export default function ResetPassword() {
   const navigate = useNavigate()
-  const [isPawwordVisible, setIsPawwordVisible] = useState(false)
-  const [isConfirmPawwordVisible, setIsConfirmPawwordVisible] = useState(false)
+  const [isPasswordVisable, setIsPasswordVisable] = useState(false);
+  const [isConfirmPasswordVisable, setIsConfirmPasswordVisable] = useState(false);
   const location = useLocation()
   let { register, formState: { errors, isSubmitting }, handleSubmit } = useForm<FormInputs>({ defaultValues: { email: location.state }, mode: 'onChange' })
   const onSubmit = async (data:any) => {
@@ -62,24 +63,24 @@ export default function ResetPassword() {
         </div>
 
         <div className='mb-3'>
-        <div>
+        <div className='relative'>
           <label className="block text-primary ">Password</label>
           <div className='flex justify-between items-center'>
           <input
-            type={isPawwordVisible ? "text" : "password"}
+            type={isPasswordVisable ? "text" : "password"}
             placeholder="Enter your new password"
             className="bg-inherit placeholder-white pb-2 border-b  border-gray-400 w-full placeholder:tracking-wide focus:outline-none text-white "
             {...register("password", PASSWORD_VALIDATION)}
           />
-          <button type='button' className='text-white' onMouseDown={(e) => {
-            e.preventDefault()
-          }} onMouseUp={(e) => {
-            e.preventDefault()
-          }} onClick={() => {
-            setIsPawwordVisible((prev) => !prev)
-          }}>
-            {isPawwordVisible ? <FaRegEye /> : <FaEyeSlash />}
-          </button>
+          <div className="absolute  right-2  top-[30px] text-white">
+              <button
+                type="button"
+                onClick={() => setIsPasswordVisable((prev) => !prev)}
+                className=" outline-none"
+              >
+                {isPasswordVisable ? <IoEyeOutline /> : <FaRegEyeSlash />}
+              </button>
+            </div>
           </div>
         </div>
         {errors?.password && (
@@ -88,24 +89,24 @@ export default function ResetPassword() {
         </div>
 
         <div className='mb-3'>
-        <div>
+        <div className='relative'>
           <label className="block text-primary ">Confirm Password</label>
           <div className='flex justify-between items-center'>
           <input
-            type={isConfirmPawwordVisible ? "text" : "password"}
+            type={isConfirmPasswordVisable ? "text" : "password"}
             placeholder="Confirm your password"
             className="bg-inherit placeholder-white pb-2 border-b  border-gray-400 w-full placeholder:tracking-wide focus:outline-none text-white "
             {...register("confirmPassword", { required: "Confirm your password" })}
           />
-          <button type='button' className='text-white' onMouseDown={(e) => {
-            e.preventDefault()
-          }} onMouseUp={(e) => {
-            e.preventDefault()
-          }} onClick={() => {
-            setIsConfirmPawwordVisible((prev) => !prev)
-          }}>
-            {isConfirmPawwordVisible ? <FaRegEye /> : <FaEyeSlash />}
-          </button>
+          <div className="absolute  right-2  top-[30px] text-white">
+            <button
+              type="button"
+              onClick={() => setIsConfirmPasswordVisable((prev) => !prev)}
+              className=" outline-none"
+            >
+              {isConfirmPasswordVisable ? <IoEyeOutline /> : <FaRegEyeSlash />}
+            </button>
+          </div>
           </div>
         </div>
         {errors?.confirmPassword && (

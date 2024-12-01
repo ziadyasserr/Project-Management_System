@@ -22,7 +22,7 @@ interface loginData {
 export default function Login() {
   const [isPasswordVisable, setIsPasswordVisable] = useState(false);
   const navigate = useNavigate();
-  const { saveLoginData } = useContext(AuthContext);
+  const { saveLoginData} = useContext(AuthContext);
   const {
     register,
     handleSubmit,

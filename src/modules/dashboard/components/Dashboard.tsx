@@ -7,10 +7,13 @@ import { GoProjectSymlink } from 'react-icons/go';
 import header from '../../../assets/header.png';
 import { AuthContext } from '../../../context/AuthContext/AuthContext';
 
+import { Link } from "react-router-dom";
+
 export default function Dashboard() {
   const { loginData } = useContext(AuthContext);
 
   return (
+
     <>
       <header
         className="relative bg-cover bg-center  text-white flex items-center h-[280px] rounded-3xl overflow-hidden"
@@ -102,4 +105,8 @@ export default function Dashboard() {
       </div>
     </>
   );
+
+
+  )
+
 }

@@ -50,15 +50,15 @@ export default function ChangePassword() {
             className="bg-inherit placeholder-white pb-2 border-b border-gray-400 w-full placeholder:tracking-wide focus:outline-none text-white"
             {...register("oldPassword", { required: "Type your old password" })}
           />
-          <div className="absolute  right-2  top-[30px] text-white">
-            <button
-              type="button"
-              onClick={() => setIsOldPasswordVisable((prev) => !prev)}
-              className=" outline-none"
-            >
-              {isOldPasswordVisable ? <IoEyeOutline /> : <FaRegEyeSlash />}
-            </button>
-          </div>
+            <div className="absolute  right-2  top-[30px] text-white">
+              <button
+                type="button"
+                onClick={() => setIsOldPasswordVisable((prev) => !prev)}
+                className=" outline-none"
+              >
+                {isOldPasswordVisable ? <IoEyeOutline /> : <FaRegEyeSlash />}
+              </button>
+            </div>
         </div>
         {errors.oldPassword && (
           <span className="text-red-600 my-3">{errors.oldPassword.message}</span>

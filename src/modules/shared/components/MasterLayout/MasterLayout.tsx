@@ -13,7 +13,7 @@ export default function MasterLayout() {
           <div className="">
             <SideBar />
           </div>
-          <div className="w-full">
+          <div className="w-full px-5 pt-5">
             <Outlet />
           </div>
         </div>

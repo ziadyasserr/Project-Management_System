@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { HiMiniBellAlert } from 'react-icons/hi2';
 import { RiArrowDropDownLine } from 'react-icons/ri';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import human from '../../../../assets/human.png';
 import logo from '../../../../assets/logo.png';
 import { AuthContext } from '../../../../context/AuthContext/AuthContext';
@@ -50,13 +50,16 @@ export default function Navbar() {
                 <RiArrowDropDownLine className="text-2xl" />
               </button>
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-3 w-40 bg-white border border-gray-200 rounded shadow-md z-10">
+                <div className="absolute right-0 mt-3 w-40 bg-white border border-gray-200 rounded shadow-md z-50 ">
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm  hover:bg-red-50 hover:text-"
+                    className="w-full text-left px-4 py-2 text-sm  hover:bg-red-50"
                   >
                     Logout
                   </button>
+                  <Link className="text-left px-4 py-2 text-sm  hover:bg-red-50 w-full block " to={"/change-password"}>
+                    ChangePassword
+                  </Link>
                 </div>
               )}
             </div>

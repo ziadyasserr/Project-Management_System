@@ -14,7 +14,7 @@ export default function AuthLayout() {
             <img src={formImg} alt="formImg" />
           </div>
 
-          <div className=" bg-[rgba(49,89,81,1)] md:w-[600px] rounded-2xl w-full md:px-20  px-10">
+          <div className=" bg-[rgba(49,89,81,1)] md:w-[650px] rounded-2xl w-full md:px-20  px-10">
             <Outlet />
           </div>
         </div>

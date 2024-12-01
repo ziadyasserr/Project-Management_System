@@ -1,10 +1,9 @@
-import { useContext, useState } from 'react';
+import {  useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaRegEyeSlash, FaSpinner } from 'react-icons/fa';
 import { IoEyeOutline } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { AuthContext } from '../../../../context/AuthContext/AuthContext';
 import {
   axiosInstance,
   USERS_URLS,

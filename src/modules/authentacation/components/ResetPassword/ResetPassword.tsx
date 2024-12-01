@@ -1,13 +1,14 @@
-<<<<<<< Updated upstream
-import React from 'react'
-=======
+
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { EMAIL_VALIDATION, PASSWORD_VALIDATION } from '../../../../services/validation/validation'
 import { axiosInstance,  USERS_URLS } from '../../../../services/apisUrls/apisUrls'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
+
+
 import { FaEyeSlash, FaRegEye, FaSpinner } from 'react-icons/fa'
+
 
 interface FormInputs {
   email: string;
@@ -15,13 +16,27 @@ interface FormInputs {
   confirmPassword: string;
   seed: string; // OTP
 }
->>>>>>> Stashed changes
+
 
 export default function ResetPassword() {
+  const navigate = useNavigate()
+  const [isPawwordVisible, setIsPawwordVisible] = useState(false)
+  const [isConfirmPawwordVisible, setIsConfirmPawwordVisible] = useState(false)
+  const location = useLocation()
+  let { register, formState: { errors, isSubmitting }, handleSubmit } = useForm<FormInputs>({ defaultValues: { email: location.state }, mode: 'onChange' })
+  const onSubmit = async (data:any) => {
+    try {
+      const response:any = await axiosInstance.post(USERS_URLS.RESET, data)
+      console.log(response);
+      toast.success("Password updated successfully")
+      navigate("/login")
+    } catch (error:any) {
+      console.log(error);
+      toast.error(error?.response?.data?.message)
+    }
+  }
   return (
-<<<<<<< Updated upstream
-    <div>ResetPassword</div>
-=======
+
     <div className="">
       <div className="my-10">
         <h6 className="text-white">Welcome to PMS</h6>
@@ -114,6 +129,8 @@ export default function ResetPassword() {
         </div>
 
         <div className="text-center py-8">
+
+
           <button
             className="text-white bg-primary hover:bg-primary_hover w-full rounded-3xl py-2 font-semibold tracking-wide flex justify-center items-center"
             disabled={isSubmitting}
@@ -126,10 +143,11 @@ export default function ResetPassword() {
             ) : (
               'Submit'
             )}
+
           </button>
         </div>
       </form>
     </div>
->>>>>>> Stashed changes
+
   )
 }

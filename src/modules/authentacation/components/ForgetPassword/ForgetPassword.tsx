@@ -1,24 +1,36 @@
 import React from 'react'
-<<<<<<< Updated upstream
-=======
+
 import { useForm } from 'react-hook-form'
 import { EMAIL_VALIDATION } from '../../../../services/validation/validation'
 import { axiosInstance,  USERS_URLS } from '../../../../services/apisUrls/apisUrls'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useNavigate } from 'react-router-dom'
+
 import { FaSpinner } from 'react-icons/fa'
+
 
 interface FormData {
   email: string;
 }
->>>>>>> Stashed changes
+
 
 export default function ForgetPassword() {
+  let navigate = useNavigate()
+  let { register, formState: { isSubmitting, errors }, handleSubmit } = useForm<FormData>()
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await axiosInstance.post(USERS_URLS.RESET_REQUEST, data)
+      console.log(response)
+      toast.success("check your mail")
+      navigate('/reset-password', { state: data.email })
+    } catch (error:any) {
+      console.log(error)
+      toast.error(error?.response?.data?.message)
+    }
+  }
   return (
-<<<<<<< Updated upstream
-    <div>ForgetPassword</div>
-=======
+
     <div>
       <div className="my-10">
         <h6 className="text-white">Welcome to PMS</h6>
@@ -40,6 +52,7 @@ export default function ForgetPassword() {
           <span className="text-red-600 my-3">{errors.email.message}</span>
         )}
         <div className="text-center py-8">
+
           <button
             className="text-white bg-primary hover:bg-primary_hover w-full rounded-3xl py-2 font-semibold tracking-wide flex justify-center items-center"
             disabled={isSubmitting}
@@ -52,10 +65,11 @@ export default function ForgetPassword() {
             ) : (
               'Submit'
             )}
+
           </button>
         </div>
       </form>
     </div>
->>>>>>> Stashed changes
+
   )
 }

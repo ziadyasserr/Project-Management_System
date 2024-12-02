@@ -63,6 +63,7 @@ export default function Register() {
     });
 
     try {
+
       const response = await publicAxiosInstance.post(
         USERS_URLS.REGISTER,
         formData,
@@ -70,8 +71,7 @@ export default function Register() {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-        },
-      );
+
       toast.success(response?.data?.message || 'Register Successfully');
       navigate('/Verify', { state: data.email });
     } catch (error) {

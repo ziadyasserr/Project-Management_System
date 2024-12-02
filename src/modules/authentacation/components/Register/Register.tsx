@@ -63,7 +63,6 @@ export default function Register() {
     });
 
     try {
-
       const response = await publicAxiosInstance.post(
         USERS_URLS.REGISTER,
         formData,
@@ -71,14 +70,18 @@ export default function Register() {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-
+        }
+      );
+    
       toast.success(response?.data?.message || 'Register Successfully');
       navigate('/Verify', { state: data.email });
     } catch (error) {
-      console.error(error);
-      toast.error(error?.response?.data?.message || 'Register failed');
+      console.error('Registration error:', error);
+      const errorMessage =
+        error?.response?.data?.message || 'Registration failed. Please try again.';
+      toast.error(errorMessage);
     }
-  };
+  }; // <-- This was missing
 
   return (
     <div className="w-full">

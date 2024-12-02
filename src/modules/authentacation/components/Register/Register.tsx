@@ -5,7 +5,7 @@ import { IoEyeOutline } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
-  axiosInstance,
+  publicAxiosInstance,
   USERS_URLS,
 } from '../../../../services/apisUrls/apisUrls';
 import {
@@ -40,7 +40,7 @@ export default function Register() {
     });
 
     try {
-      const response = await axiosInstance.post(USERS_URLS.REGISTER, formData, {
+      const response = await publicAxiosInstance.post(USERS_URLS.REGISTER, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -113,7 +113,7 @@ export default function Register() {
           <div>
             <label className="block text-primary">Phone Number</label>
             <input
-              type="text"
+              type="tel"
               placeholder="Phone Number"
               className="bg-inherit placeholder-gray-300 pb-2 border-b border-gray-400 w-full placeholder:tracking-wide focus:outline-none text-white"
               {...register('phoneNumber', {

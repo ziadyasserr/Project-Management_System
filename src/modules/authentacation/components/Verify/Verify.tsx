@@ -3,7 +3,7 @@ import { FaSpinner } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
-  axiosInstance,
+  publicAxiosInstance,
   USERS_URLS,
 } from '../../../../services/apisUrls/apisUrls';
 import { EMAIL_VALIDATION } from '../../../../services/validation/validation';
@@ -25,7 +25,7 @@ export default function Verify() {
   const onSubmit = async (data: verifyData) => {
     // console.log(data);
     try {
-      const response = await axiosInstance.put(USERS_URLS.VERIFY, data);
+      const response = await publicAxiosInstance.put(USERS_URLS.VERIFY, data);
       toast.success(response?.data?.message || 'Verfiy Successful');
       navigate('/login');
     } catch (error) {

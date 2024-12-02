@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useForm } from 'react-hook-form'
 import { EMAIL_VALIDATION } from '../../../../services/validation/validation'
-import { axiosInstance,  USERS_URLS } from '../../../../services/apisUrls/apisUrls'
+import { publicAxiosInstance,  USERS_URLS } from '../../../../services/apisUrls/apisUrls'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useNavigate } from 'react-router-dom'
@@ -20,7 +20,7 @@ export default function ForgetPassword() {
   let { register, formState: { isSubmitting, errors }, handleSubmit } = useForm<FormData>()
   const onSubmit = async (data: FormData) => {
     try {
-      const response = await axiosInstance.post(USERS_URLS.RESET_REQUEST, data)
+      const response = await publicAxiosInstance.post(USERS_URLS.RESET_REQUEST, data)
       console.log(response)
       toast.success("check your mail")
       navigate('/reset-password', { state: data.email })

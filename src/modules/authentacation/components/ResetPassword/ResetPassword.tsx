@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { EMAIL_VALIDATION, PASSWORD_VALIDATION } from '../../../../services/validation/validation'
-import { axiosInstance,  USERS_URLS } from '../../../../services/apisUrls/apisUrls'
+import { publicAxiosInstance,  USERS_URLS } from '../../../../services/apisUrls/apisUrls'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 
@@ -27,7 +27,7 @@ export default function ResetPassword() {
   let { register, formState: { errors, isSubmitting }, handleSubmit } = useForm<FormInputs>({ defaultValues: { email: location.state }, mode: 'onChange' })
   const onSubmit = async (data:any) => {
     try {
-      const response:any = await axiosInstance.post(USERS_URLS.RESET, data)
+      const response:any = await publicAxiosInstance.post(USERS_URLS.RESET, data)
       console.log(response);
       toast.success("Password updated successfully")
       navigate("/login")

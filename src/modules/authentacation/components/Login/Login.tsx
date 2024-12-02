@@ -27,9 +27,9 @@ interface LoginResponse {
 export default function Login() {
   const [isPasswordVisable, setIsPasswordVisable] = useState(false);
   const navigate = useNavigate();
-  const { saveLoginData} = useContext(AuthContext);
+  const { saveLoginData } = useContext(AuthContext);
   const {
-    register,
+    register, 
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
@@ -86,7 +86,7 @@ export default function Login() {
                 onClick={() => setIsPasswordVisable((prev) => !prev)}
                 className=" outline-none"
               >
-                {isPasswordVisable ? <IoEyeOutline />  : <FaRegEyeSlash />}
+                {isPasswordVisable ? <IoEyeOutline /> : <FaRegEyeSlash />}
               </button>
             </div>
             {errors?.password && (

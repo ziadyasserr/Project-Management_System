@@ -19,7 +19,7 @@ export default function Navbar() {
   return (
     <>
       <div className="flex flex-col md:flex-row gap-5 md:gap-0 justify-between items-center bg-gray-50 shadow-lg py-1  px-5">
-        <div>
+        <div onClick={() => navigate('/dashboard')} className="cursor-pointer">
           <img src={logo} alt="logo" />
         </div>
         <div className="flex items-center gap-5">
@@ -57,7 +57,10 @@ export default function Navbar() {
                   >
                     Logout
                   </button>
-                  <Link className="text-left px-4 py-2 text-sm  hover:bg-red-50 w-full block " to={"/change-password"}>
+                  <Link
+                    className="text-left px-4 py-2 text-sm  hover:bg-red-50 w-full block "
+                    to={'/change-password'}
+                  >
                     ChangePassword
                   </Link>
                 </div>

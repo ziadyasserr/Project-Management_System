@@ -10,12 +10,15 @@ import Register from './modules/authentacation/components/Register/Register';
 import ResetPassword from './modules/authentacation/components/ResetPassword/ResetPassword';
 import Verify from './modules/authentacation/components/Verify/Verify';
 import Dashboard from './modules/dashboard/components/Dashboard';
+import ProjectForm from './modules/projects/components/ProjectForm/ProjectForm.js';
 import ProjectsList from './modules/projects/components/ProjectsList/ProjectsList';
 import AuthLayout from './modules/shared/components/AuthLayout/AuthLayout';
 import MasterLayout from './modules/shared/components/MasterLayout/MasterLayout';
 import NotFound from './modules/shared/components/NotFound/NotFound';
+import ProtectedRoute from './modules/shared/components/ProtectedRoute/ProtectedRoute';
 import TasksList from './modules/tasks/components/TasksList/TasksList';
 import UsersList from './modules/users/components/UsersList/UsersList';
+import TaskForm from './modules/tasks/components/TaskForm/TaskForm.js';
 
 function App() {
   const routes = createBrowserRouter([
@@ -35,13 +38,19 @@ function App() {
     },
     {
       path: '',
-      element: <MasterLayout />,
+      element: (
+        <ProtectedRoute>
+          <MasterLayout />
+        </ProtectedRoute>
+      ),
       errorElement: <NotFound />,
       children: [
         { index: true, element: <Dashboard /> },
         { path: 'dashboard', element: <Dashboard /> },
         { path: 'projects', element: <ProjectsList /> },
+        { path: 'project-form', element: <ProjectForm /> },
         { path: 'tasks', element: <TasksList /> },
+        { path: 'task-form', element: <TaskForm /> },
         { path: 'users', element: <UsersList /> },
       ],
     },

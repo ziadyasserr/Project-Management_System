@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../../../context/AuthContext/AuthContext';
 import {
-  axiosInstance,
+  publicAxiosInstance,
   USERS_URLS,
 } from '../../../../services/apisUrls/apisUrls';
 import {
@@ -19,12 +19,17 @@ interface loginData {
   password: string;
 }
 
+interface LoginResponse {
+  token: string;
+  message: string;
+}
+
 export default function Login() {
   const [isPasswordVisable, setIsPasswordVisable] = useState(false);
   const navigate = useNavigate();
   const { saveLoginData } = useContext(AuthContext);
   const {
-    register,git 
+    register, 
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
@@ -32,7 +37,7 @@ export default function Login() {
   const onSubmit = async (data: loginData) => {
     // console.log(data);
     try {
-      const response = await axiosInstance.post(USERS_URLS.LOGIN, data);
+      const response = await publicAxiosInstance.post<LoginResponse>(USERS_URLS.LOGIN, data);
       localStorage.setItem('token', response.data.token);
       saveLoginData();
       // console.log(response);

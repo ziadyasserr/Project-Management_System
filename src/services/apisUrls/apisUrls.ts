@@ -6,6 +6,9 @@ export const axiosInstance = axios.create({
   baseURL,
   headers: { Authorization: localStorage.getItem('token') },
 });
+export const publicAxiosInstance = axios.create({
+  baseURL,
+});
 
 // USERS_URLS
 export const USERS_URLS = {

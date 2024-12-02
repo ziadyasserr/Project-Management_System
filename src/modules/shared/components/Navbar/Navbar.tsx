@@ -12,7 +12,7 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Clear token
+    localStorage.clear()// Clear token
     navigate('/login'); // Redirect to login page
   };
 

@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaRegEyeSlash, FaSpinner } from 'react-icons/fa';
 import { IoEyeOutline } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { FaCamera } from 'react-icons/fa';  // Camera icon import
+
+import human from '../../../../assets/human.png';
+
 import {
-  axiosInstance,
+  publicAxiosInstance,
   USERS_URLS,
 } from '../../../../services/apisUrls/apisUrls';
 import {
@@ -25,6 +29,8 @@ interface RegisterData {
 
 export default function Register() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null); // State for image preview
+  const [isImageSelected, setIsImageSelected] = useState(false); // Flag to indicate if an image is selected
   const navigate = useNavigate();
   const {
     register,
@@ -33,18 +39,39 @@ export default function Register() {
     formState: { errors, isSubmitting },
   } = useForm();
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Handle file change and update the form value
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setValue('profileImage', file); // Bind the file to react-hook-form
+      setImagePreview(URL.createObjectURL(file)); // Set the preview of the selected image
+      setIsImageSelected(true); // Mark the image as selected
+      console.log('Selected file:', file);
+    }
+  };
+
   const onSubmit = async (data: RegisterData) => {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
-      formData.append(key, value as string | Blob);
+      if (key === 'profileImage' && value instanceof File) {
+        formData.append(key, value); // Handle file specifically
+      } else {
+        formData.append(key, value as string);
+      }
     });
 
     try {
-      const response = await axiosInstance.post(USERS_URLS.REGISTER, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
+      const response = await publicAxiosInstance.post(
+        USERS_URLS.REGISTER,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         },
-      });
+      );
       toast.success(response?.data?.message || 'Register Successfully');
       navigate('/Verify', { state: data.email });
     } catch (error) {
@@ -54,16 +81,35 @@ export default function Register() {
   };
 
   return (
-    <div className="   ">
-      <div className=" my-10">
+    <div className="w-full">
+      <div className="my-6">
         <h6 className="text-white text-sm">Welcome to PMS</h6>
         <h2 className="text-primary font-bold text-3xl tracking-wide">
-          <span className="capitalize border-b-4 border-primary">R</span>
-          egister
+          <span className="capitalize border-b-4 border-primary">R</span>egister
         </h2>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full ">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+        <div className="flex justify-center flex-col items-center mb-8 relative">
+          <label htmlFor="profileImage" className="cursor-pointer relative ">
+            <img
+              src={imagePreview || human}
+              alt="Profile"
+              className={` w-[70px] h-[70px] rounded-full border border-gray-300 bg-[#3159518A]   ${isImageSelected ? 'opacity-80' : ''}`} // Apply opacity when image is selected
+            />
+            <FaCamera className="absolute top-[26px] right-[26px] text-white text-xl opacity-50  " /> 
+          </label>
+          <input
+            type="file"
+            id="profileImage"
+            ref={fileInputRef}
+            className="hidden"
+            {...register('profileImage')}
+            onChange={handleFileChange}
+            accept="image/*"
+          />
+        </div>
+
         <div className="grid grid-cols-2 gap-6">
           <div>
             <label className="block text-primary">User Name</label>
@@ -113,7 +159,7 @@ export default function Register() {
           <div>
             <label className="block text-primary">Phone Number</label>
             <input
-              type="text"
+              type="tel"
               placeholder="Phone Number"
               className="bg-inherit placeholder-gray-300 pb-2 border-b border-gray-400 w-full placeholder:tracking-wide focus:outline-none text-white"
               {...register('phoneNumber', {
@@ -169,17 +215,6 @@ export default function Register() {
                 {errors?.confirmPassword?.message}
               </span>
             )}
-          </div>
-
-          {/* Input for Image */}
-          <div>
-            <label className="block text-primary">Profile Image</label>
-            <input
-              type="file"
-              className="block text-white mt-2"
-              {...register('profileImage')}
-              onChange={(e) => setValue('profileImage', e.target.files?.[0])}
-            />
           </div>
         </div>
 

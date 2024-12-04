@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { PASSWORD_VALIDATION } from '../../../../services/validation/validation'
-import { publicAxiosInstance, USERS_URLS } from '../../../../services/apisUrls/apisUrls'
+import { axiosInstance, USERS_URLS } from '../../../../services/apisUrls/apisUrls'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { FaRegEyeSlash, FaSpinner } from 'react-icons/fa'
@@ -24,7 +24,7 @@ export default function ChangePassword() {
 
   const onSubmit = async (data: formData) => {
     try {
-      let response = await publicAxiosInstance.put(USERS_URLS.CHANGE_PASSWORD, data)
+      let response = await axiosInstance.put(USERS_URLS.CHANGE_PASSWORD, data)
       console.log(response);
       navigate("/login")
       toast.success(response.data.message || "password updated succeffully")

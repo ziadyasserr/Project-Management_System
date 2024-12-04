@@ -19,3 +19,12 @@ export const USERS_URLS = {
   VERIFY: `/Users/verify`,
   CHANGE_PASSWORD: `/Users/ChangePassword`,
 };
+export const TASKS_URLS = {
+  GET_TASKS: `/Task`,
+};
+export const PROJECTS_URLS = {
+  GET_PROJECTS: `/Project/manager`,
+  CREATE_PROJECT: `/Project`,
+  GET_PROJECT: (id: number) => `/Project/${id}`,
+  UPDATE_PROJECT: (id: number) => `/Project/${id}`,
+};

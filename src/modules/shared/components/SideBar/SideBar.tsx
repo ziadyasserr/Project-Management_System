@@ -11,8 +11,8 @@ export default function SideBar() {
 
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const saved = localStorage.getItem('sidebarCollapsed');
-    return saved === 'true'; 
-  });  
+    return saved === 'true'; //string to boolean
+  });   
   useEffect(() => {
     localStorage.setItem('sidebarCollapsed', isCollapsed);
   }, [isCollapsed]);

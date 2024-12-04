@@ -16,9 +16,9 @@ import AuthLayout from './modules/shared/components/AuthLayout/AuthLayout';
 import MasterLayout from './modules/shared/components/MasterLayout/MasterLayout';
 import NotFound from './modules/shared/components/NotFound/NotFound';
 import ProtectedRoute from './modules/shared/components/ProtectedRoute/ProtectedRoute';
+import TaskForm from './modules/tasks/components/TaskForm/TaskForm.js';
 import TasksList from './modules/tasks/components/TasksList/TasksList';
 import UsersList from './modules/users/components/UsersList/UsersList';
-import TaskForm from './modules/tasks/components/TaskForm/TaskForm.js';
 
 function App() {
   const routes = createBrowserRouter([
@@ -48,9 +48,11 @@ function App() {
         { index: true, element: <Dashboard /> },
         { path: 'dashboard', element: <Dashboard /> },
         { path: 'projects', element: <ProjectsList /> },
-        { path: 'project-form', element: <ProjectForm /> },
+        { path: 'projects/new-project', element: <ProjectForm /> },
+        { path: 'projects/:projectId', element: <ProjectForm /> },
         { path: 'tasks', element: <TasksList /> },
-        { path: 'task-form', element: <TaskForm /> },
+        { path: 'task/new-task', element: <TaskForm /> },
+        { path: 'task/:taskId', element: <TaskForm /> },
         { path: 'users', element: <UsersList /> },
       ],
     },

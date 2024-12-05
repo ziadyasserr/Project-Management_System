@@ -1,14 +1,63 @@
 // import React from 'react'
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { BsListTask } from 'react-icons/bs';
 import { GiProgression } from 'react-icons/gi';
 import { GoProjectSymlink } from 'react-icons/go';
 
 import header from '../../../assets/header.png';
 import { AuthContext } from '../../../context/AuthContext/AuthContext';
+import {
+  axiosInstance,
+  TASKS_URLS,
+  USERS_URLS,
+} from '../../../services/apisUrls/apisUrls';
+
+interface UsersCount {
+  activatedEmployeeCount: number;
+  deactivatedEmployeeCount: number;
+}
+interface TasksCount {
+  toDo: number;
+  inProgress: number;
+  done: number;
+}
 
 export default function Dashboard() {
   const { loginData } = useContext(AuthContext);
+  const [userState, setUserState] = useState<UsersCount>({
+    activatedEmployeeCount: 0,
+    deactivatedEmployeeCount: 0,
+  });
+
+  const [taskState, setTaskState] = useState<TasksCount>({
+    toDo: 0,
+    inProgress: 0,
+    done: 0,
+  });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axiosInstance.get<UsersCount>(
+          USERS_URLS.COUNT_USERS,
+        );
+        console.log(response.data);
+        setUserState(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+
+    (async () => {
+      try {
+        const response =await axiosInstance.get<TasksCount>(TASKS_URLS.TASKS_COUNT);
+        console.log(response.data);
+        setTaskState(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
   return (
     <>
@@ -47,27 +96,27 @@ export default function Dashboard() {
             <div className="md:col-span-2 col-span-3">
               <div className="bg-[#E5E6F4] rounded-xl  p-4">
                 <GiProgression className="text-3xl   bg-[#CFD1EC] rounded-xl " />
-                <span className="block text-[#6F7881] my-1">progress</span>
+                <span className="block text-[#6F7881] my-1">Tasks ToDo</span>
                 <span className="block text-black text-lg tracking-wider">
-                  $ 1234
+                  {taskState.toDo}
                 </span>
               </div>
             </div>
             <div className="md:col-span-2 col-span-3 ">
               <div className="bg-[#F4F4E5] rounded-xl  p-4">
                 <BsListTask className="text-3xl   bg-[#E4E4BC] rounded-xl " />
-                <span className="block text-[#6F7881] my-1">Tasks Num</span>
+                <span className="block text-[#6F7881] my-1">Tasks Progress</span>
                 <span className="block text-black text-lg tracking-wider">
-                  $ 7588
+                {taskState.inProgress}
                 </span>
               </div>
             </div>
             <div className="md:col-span-2 col-span-3 ">
               <div className="bg-[#F4E5ED] rounded-xl  p-4">
                 <GoProjectSymlink className="text-3xl   bg-[#E7C3D7] rounded-xl " />
-                <span className="block text-[#6F7881] my-1">Projects Num</span>
+                <span className="block text-[#6F7881] my-1">Tasks Done</span>
                 <span className="block text-black text-lg tracking-wider">
-                  $ 5748
+                {taskState.done}
                 </span>
               </div>
             </div>
@@ -88,7 +137,7 @@ export default function Dashboard() {
                 <GiProgression className="text-3xl   bg-[#CFD1EC] rounded-xl " />
                 <span className="block text-[#6F7881] my-1">Active</span>
                 <span className="block text-black text-lg tracking-wider">
-                  $ 1234
+                  {userState.activatedEmployeeCount}
                 </span>
               </div>
             </div>
@@ -97,7 +146,7 @@ export default function Dashboard() {
                 <BsListTask className="text-3xl   bg-[#E4E4BC] rounded-xl " />
                 <span className="block text-[#6F7881] my-1">Inactive</span>
                 <span className="block text-black text-lg tracking-wider">
-                  $ 7588
+                  {userState.deactivatedEmployeeCount}
                 </span>
               </div>
             </div>

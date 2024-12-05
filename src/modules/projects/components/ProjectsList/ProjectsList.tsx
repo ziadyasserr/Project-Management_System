@@ -1,24 +1,38 @@
 // import React from 'react'
+import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { BiExpandVertical } from 'react-icons/bi';
 import { FaChevronLeft, FaChevronRight, FaPlus } from 'react-icons/fa';
 import { IoIosSearch } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
+
 import {
   axiosInstance,
   PROJECTS_URLS,
 } from '../../../../services/apisUrls/apisUrls';
 
-interface ProjectsResponse {
-  data: any;
-  message: string;
-}
-interface ProjectData {
+interface Task {
   id: number;
   title: string;
   description: string;
-  creationDate: number;
-  task: object[];
+  status: string;
+  creationDate: string;
+}
+
+interface DataResponse {
+  id: number;
+  description: string;
+  title: string;
+  creationDate: string;
+  task: Task[];
+}
+
+interface ProjectResponse {
+  data: DataResponse[];
+  pageNumber: number;
+  pageSize: number;
+  totalNumberOfRecords: number;
+  totalNumberOfPages: number;
 }
 
 export default function ProjectsList() {
@@ -28,12 +42,13 @@ export default function ProjectsList() {
   // const handleClick = (id: number) => {
   //   setShowOptions((prev) => (prev === id ? null : id)); // Toggle menu for the specific project
   // };
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<DataResponse[]>([]);
 
-  const allProjects = async () => {
+  const allProjects = async (title?: string) => {
     try {
-      const response = await axiosInstance.get<ProjectsResponse>(
+      const response = await axiosInstance.get<ProjectResponse>(
         PROJECTS_URLS.GET_PROJECTS,
+        { params: { title } },
       );
       console.log(response.data.data);
       setProjects(response.data.data);
@@ -44,6 +59,11 @@ export default function ProjectsList() {
   useEffect(() => {
     allProjects();
   }, []);
+
+  const projectsFilter = (input: React.ChangeEvent<HTMLInputElement>) => {
+    allProjects(input.target.value);
+    // console.log(input.target.value);
+  };
 
   return (
     <>
@@ -67,6 +87,7 @@ export default function ProjectsList() {
               type="search"
               placeholder="Search here"
               className="shadow-2xl pl-10 py-2 focus:outline-none ml-4 my-5 border-[.7px] rounded-[24px]"
+              onChange={projectsFilter}
             />
             <IoIosSearch className="absolute left-8 bottom-8" />
           </div>
@@ -121,7 +142,7 @@ export default function ProjectsList() {
 
             {projects.length > 0 ? (
               <tbody>
-                {projects.map((project: ProjectData) => (
+                {projects.map((project: DataResponse) => (
                   <tr className=" even:bg-[#F5F5F5]" key={project.id}>
                     <td
                       scope="row"
@@ -140,13 +161,15 @@ export default function ProjectsList() {
                       scope="row"
                       className="px-6 py-4 font-medium text-[#4F4F4F] whitespace-nowrap"
                     >
-                      {project.task.length}
+                      {project.task.length > 0
+                        ? project.task.length
+                        : 'No tasks'}
                     </td>
                     <td
                       scope="row"
                       className="px-6 py-4 font-medium text-[#4F4F4F] whitespace-nowrap"
                     >
-                      {project.creationDate}
+                      {format(new Date(project.creationDate), 'yyyy-MM-dd')}
                     </td>
 
                     <td

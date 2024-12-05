@@ -18,9 +18,11 @@ export const USERS_URLS = {
   REGISTER: `/Users/Register`,
   VERIFY: `/Users/verify`,
   CHANGE_PASSWORD: `/Users/ChangePassword`,
+  COUNT_USERS: `/Users/count`,
 };
 export const TASKS_URLS = {
   GET_TASKS: `/Task`,
+  TASKS_COUNT: `/Task/count`,
 };
 export const PROJECTS_URLS = {
   GET_PROJECTS: `/Project/manager`,

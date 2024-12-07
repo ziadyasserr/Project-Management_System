@@ -1,33 +1,31 @@
 import { useForm } from 'react-hook-form';
 import { FaSpinner } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
-  axiosInstance,
+  publicAxiosInstance,
   USERS_URLS,
 } from '../../../../services/apisUrls/apisUrls';
-import {
-  EMAIL_VALIDATION,
-} from '../../../../services/validation/validation';
+import { EMAIL_VALIDATION } from '../../../../services/validation/validation';
 
 interface verifyData {
-  email: string,
-  code: string
+  email: string;
+  code: string;
 }
 
 export default function Verify() {
-
+  const location = useLocation();
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm({ defaultValues: { email: location.state } });
 
   const onSubmit = async (data: verifyData) => {
     // console.log(data);
     try {
-      const response = await axiosInstance.put(USERS_URLS.VERIFY, data);
+      const response = await publicAxiosInstance.put(USERS_URLS.VERIFY, data);
       toast.success(response?.data?.message || 'Verfiy Successful');
       navigate('/login');
     } catch (error) {
@@ -78,10 +76,10 @@ export default function Verify() {
               {isSubmitting ? (
                 <>
                   <FaSpinner className="animate-spin mr-2" />
-                 Send ...
+                  Verifying ...
                 </>
               ) : (
-                'Send'
+                'Verify'
               )}
             </button>
           </div>

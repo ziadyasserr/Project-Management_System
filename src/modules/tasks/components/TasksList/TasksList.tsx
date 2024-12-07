@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { BiExpandVertical } from "react-icons/bi";
 import { BsThreeDotsVertical, BsEye, BsPencil, BsTrash } from "react-icons/bs";
-import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
+import {  FaPlus } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance, TASKS_URLS } from "../../../../services/apisUrls/apisUrls";
-import { compareAsc, format } from "date-fns";
+import { format } from "date-fns";
 
 interface DataResponse {
   id: number;

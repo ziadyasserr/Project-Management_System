@@ -6,10 +6,12 @@ import { FaChevronLeft, FaChevronRight, FaPlus } from 'react-icons/fa';
 import { IoIosSearch } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 
+import { toast } from 'react-toastify';
 import {
   axiosInstance,
   PROJECTS_URLS,
 } from '../../../../services/apisUrls/apisUrls';
+import DeleteConfirmation from '../../../shared/components/DeleteConfirmation/DeleteConfirmation';
 
 interface Task {
   id: number;
@@ -65,8 +67,43 @@ export default function ProjectsList() {
     // console.log(input.target.value);
   };
 
+  const [projectId, setProjectId] = useState<number>(0);
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // const toggleModal = (id: number) => {
+  //   setProjectId(id);
+  // };
+  const toggleModal = (id: number) => {
+    setProjectId(id);
+    setIsModalOpen(true);
+    // setIsModalOpen((prev) => !prev);
+  };
+
+  const deleteProject = async () => {
+    try {
+      const response = await axiosInstance.delete(
+        PROJECTS_URLS.DELETE_PROJECT(projectId),
+      );
+      console.log(response);
+      toast.success('delete successfully');
+      setIsModalOpen(false);
+      allProjects();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
+      <div>
+        <DeleteConfirmation
+          deleteFun={deleteProject}
+          showModal={isModalOpen}
+          closeModal={() => setIsModalOpen(false)}
+          title={'project'}
+        />
+      </div>
+
       <div>
         <div className="title flex justify-between shadow-sm px-6 py-4 mb-6">
           <h3 className="text-[#4F4F4F] font-medium text-[28px]">Projects</h3>
@@ -155,7 +192,6 @@ export default function ProjectsList() {
                       className="px-6 py-4 font-medium text-[#4F4F4F] whitespace-nowrap"
                     >
                       {project.description}
-                      ..
                     </td>
                     <td
                       scope="row"
@@ -178,10 +214,10 @@ export default function ProjectsList() {
                     >
                       <button
                         className=" bg-red-400"
-                        onClick={() => navigate('/projects/new-project')}
+                        onClick={() => toggleModal(project.id)}
                       >
                         {' '}
-                        add
+                        delete
                       </button>
                       <button
                         className=" bg-red-800"

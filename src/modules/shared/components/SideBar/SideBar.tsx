@@ -19,7 +19,7 @@ export default function SideBar() {
   
   return (
     <Sidebar
-      className="h-[93vh]  bg-[#0E382F]  text-white  relative"
+      className="h-[93vh]  bg-[#0E382F]  text-white  relative "
       collapsed={isCollapsed}
     >
       <button

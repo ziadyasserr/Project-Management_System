@@ -1,16 +1,19 @@
 // import React from 'react'
-import { useContext, useEffect, useState } from 'react';
-import { BsListTask } from 'react-icons/bs';
-import { GiProgression } from 'react-icons/gi';
-import { GoProjectSymlink } from 'react-icons/go';
+import { useContext, useEffect, useState } from "react";
+import { BsListTask } from "react-icons/bs";
+import { GiProgression } from "react-icons/gi";
+import { GoProjectSymlink } from "react-icons/go";
 
-import header from '../../../assets/header.png';
-import { AuthContext } from '../../../context/AuthContext/AuthContext';
+import header from "../../../assets/header.png";
+import { AuthContext } from "../../../context/AuthContext/AuthContext";
 import {
   axiosInstance,
   TASKS_URLS,
   USERS_URLS,
-} from '../../../services/apisUrls/apisUrls';
+} from "../../../services/apisUrls/apisUrls";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Pie } from "react-chartjs-2";
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface UsersCount {
   activatedEmployeeCount: number;
@@ -35,11 +38,52 @@ export default function Dashboard() {
     done: 0,
   });
 
+ // Pie chart data for tasks
+  const tasksData = {
+    labels: ["ToDo", "InProgress", "Done"],
+    datasets: [
+      {
+        data: [taskState.toDo, taskState.inProgress, taskState.done],
+        backgroundColor: ["#e6e7f5", "#f5f5e6", "#f5e6ee"],
+        hoverBackgroundColor: ["#b5b6d1", "#c2c2a3", "#cbb4c0"],
+      },
+    ],
+  };
+
+  // Pie chart data for users
+  const usersData = {
+    labels: ["Activated", "Deactivated"],
+    datasets: [
+      {
+        data: [
+          userState.activatedEmployeeCount,
+          userState.deactivatedEmployeeCount,
+        ],
+        backgroundColor: ["#e6e7f5", "#f5f5e6"],
+        hoverBackgroundColor: ["#b5b6d1", "#c2c2a3"],
+      },
+    ],
+  };
+
+  // Options for the charts
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Distribution",
+      },
+    },
+  };
+
   useEffect(() => {
     (async () => {
       try {
         const response = await axiosInstance.get<UsersCount>(
-          USERS_URLS.COUNT_USERS,
+          USERS_URLS.COUNT_USERS
         );
         console.log(response.data);
         setUserState(response.data);
@@ -50,7 +94,9 @@ export default function Dashboard() {
 
     (async () => {
       try {
-        const response =await axiosInstance.get<TasksCount>(TASKS_URLS.TASKS_COUNT);
+        const response = await axiosInstance.get<TasksCount>(
+          TASKS_URLS.TASKS_COUNT
+        );
         console.log(response.data);
         setTaskState(response.data);
       } catch (error) {
@@ -71,7 +117,7 @@ export default function Dashboard() {
 
         <div className=" z-20 p-5">
           <h6 className="text-4xl tracking-wide">
-            Welcome{' '}
+            Welcome{" "}
             <span className="text-primary tracking-wider">
               {loginData?.userName}
             </span>
@@ -105,9 +151,11 @@ export default function Dashboard() {
             <div className="md:col-span-2 col-span-3 ">
               <div className="bg-[#F4F4E5] rounded-xl  p-4">
                 <BsListTask className="text-3xl   bg-[#E4E4BC] rounded-xl " />
-                <span className="block text-[#6F7881] my-1">Tasks Progress</span>
+                <span className="block text-[#6F7881] my-1">
+                  Tasks Progress
+                </span>
                 <span className="block text-black text-lg tracking-wider">
-                {taskState.inProgress}
+                  {taskState.inProgress}
                 </span>
               </div>
             </div>
@@ -116,10 +164,13 @@ export default function Dashboard() {
                 <GoProjectSymlink className="text-3xl   bg-[#E7C3D7] rounded-xl " />
                 <span className="block text-[#6F7881] my-1">Tasks Done</span>
                 <span className="block text-black text-lg tracking-wider">
-                {taskState.done}
+                  {taskState.done}
                 </span>
               </div>
             </div>
+          </div>
+          <div className="w-[500px] h-[500px] flex justify-center items-center my-10">
+            <Pie data={tasksData} options={options}/>
           </div>
         </div>
         <div className="md:col-span-4  col-span-2 bg-[#F8F9FB] p-6 rounded-2xl ">
@@ -150,6 +201,9 @@ export default function Dashboard() {
                 </span>
               </div>
             </div>
+          </div>
+          <div className="w-[500px] h-[500px] flex justify-center items-center my-10">
+          <Pie data={usersData} options={options}/>
           </div>
         </div>
       </div>

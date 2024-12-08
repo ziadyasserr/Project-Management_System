@@ -19,7 +19,7 @@ export default function SideBar() {
   
   return (
     <Sidebar
-      className="h-[93vh]  bg-[#0E382F]  text-white  relative "
+      className="h-screen  bg-[#0E382F]  text-white  relative  "
       collapsed={isCollapsed}
     >
       <button
@@ -39,6 +39,10 @@ export default function SideBar() {
         <MenuItem component={<Link to="/tasks" />} icon={<FaTasks />}>
           {' '}
           Tasks{' '}
+        </MenuItem>
+        <MenuItem component={<Link to="/tasks-user" />} icon={<FaTasks />}>
+          
+           user Tasks
         </MenuItem>
       </Menu>
     </Sidebar>

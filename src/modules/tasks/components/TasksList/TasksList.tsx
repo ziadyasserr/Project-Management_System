@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { BsThreeDotsVertical, BsEye, BsPencil, BsTrash } from "react-icons/bs";
-import { FaChevronLeft, FaChevronRight, FaPlus } from "react-icons/fa";
-import { IoIosSearch } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
-import { format } from "date-fns";
-import noDataPhoto from "../../../../assets/nodatafound.png";
+import { format } from 'date-fns';
+import React, { useEffect, useState } from 'react';
+import { BsEye, BsPencil, BsThreeDotsVertical, BsTrash } from 'react-icons/bs';
+import { FaChevronLeft, FaChevronRight, FaPlus } from 'react-icons/fa';
+import { IoIosSearch } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
+import noDataPhoto from '../../../../assets/nodatafound.png';
 import {
   axiosInstance,
   TASKS_URLS,
-} from "../../../../services/apisUrls/apisUrls";
-import DeleteConfirmation from "../../../shared/components/DeleteConfirmation/DeleteConfirmation";
+} from '../../../../services/apisUrls/apisUrls';
+import DeleteConfirmation from '../../../shared/components/DeleteConfirmation/DeleteConfirmation';
 
 interface DataResponse {
   id: number;
@@ -30,7 +30,7 @@ interface DataResponse {
 export default function TasksList() {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState<DataResponse[]>([]);
-  const [nameValue, setNameValue] = useState("");
+  const [nameValue, setNameValue] = useState('');
   const [arrayOfPages, setArrayOfPages] = useState<number[]>([]);
   const [taskId, setTaskId] = useState(0);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -48,7 +48,7 @@ export default function TasksList() {
   const getAllTasks = async (
     title: string,
     pageNumber: number,
-    pageSize: number
+    pageSize: number,
   ) => {
     try {
       const response = await axiosInstance.get(TASKS_URLS.GET_TASKS_MANAGER, {
@@ -57,7 +57,7 @@ export default function TasksList() {
       setArrayOfPages(
         Array(response.data.totalNumberOfPages)
           .fill()
-          .map((_, i) => i + 1)
+          .map((_, i) => i + 1),
       );
       setTasks(response.data.data);
       console.log(response.data.data);
@@ -68,10 +68,12 @@ export default function TasksList() {
 
   const deleteTask = async () => {
     try {
-      let response = await axiosInstance.delete(TASKS_URLS.DELETE_TASK(taskId));
+      const response = await axiosInstance.delete(
+        TASKS_URLS.DELETE_TASK(taskId),
+      );
       console.log(response);
-      setIsModalOpen(false)
-      getAllTasks(nameValue,pageNumber,pageSize)
+      setIsModalOpen(false);
+      getAllTasks(nameValue, pageNumber, pageSize);
     } catch (error) {
       console.log(error);
     }
@@ -83,7 +85,7 @@ export default function TasksList() {
 
   const getNameValue = (input: React.ChangeEvent<HTMLInputElement>) => {
     setNameValue(input.target.value);
-    getAllTasks(input.target.value,pageNumber,pageSize);
+    getAllTasks(input.target.value, pageNumber, pageSize);
   };
 
   const handlePageSize = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -91,7 +93,7 @@ export default function TasksList() {
     setPageNumber(1);
   };
 
-  const handlePageNumber = (newPage:any) => {
+  const handlePageNumber = (newPage: any) => {
     setPageNumber(newPage);
   };
 
@@ -113,7 +115,7 @@ export default function TasksList() {
         <h3 className="text-[#4F4F4F] font-medium text-2xl">Tasks</h3>
         <button
           className="bg-primary text-white rounded-2xl py-2 px-6 flex items-center gap-3"
-          onClick={() => navigate("/task/new-task")}
+          onClick={() => navigate('/task/new-task')}
         >
           <FaPlus />
           Add New Task
@@ -176,11 +178,11 @@ export default function TasksList() {
                     {task.title}
                   </td>
                   <td className="px-6 py-4">
-                    {task.status == "ToDo" ? (
+                    {task.status == 'ToDo' ? (
                       <span className="bg-[#E4E1F5] text-white py-2 px-4 rounded-full">
                         {task.status}
                       </span>
-                    ) : task.status == "InProgress" ? (
+                    ) : task.status == 'InProgress' ? (
                       <span className="bg-[#EF9B28A3] text-white py-2 px-4 rounded-full">
                         {task.status}
                       </span>
@@ -195,7 +197,7 @@ export default function TasksList() {
                   </td>
                   <td className="px-6 py-4">{task.project.title}</td>
                   <td className="px-6 py-4">
-                    {format(new Date(task.creationDate), "yyyy-MM-dd")}
+                    {format(new Date(task.creationDate), 'yyyy-MM-dd')}
                   </td>
                   <td className="px-6 py-4 relative">
                     <BsThreeDotsVertical
@@ -243,6 +245,7 @@ export default function TasksList() {
         )}
         <div className="py-8 flex justify-end items-center gap-5 w-full"></div>
       </div>
+
       <div className="py-8 flex justify-end items-center gap-5 w-full">
         <div className="flex justify-between items-center gap-4">
           <span className="text-[#4F4F4F]">Showing</span>

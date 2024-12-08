@@ -18,17 +18,17 @@ export const USERS_URLS = {
   REGISTER: `/Users/Register`,
   VERIFY: `/Users/verify`,
   CHANGE_PASSWORD: `/Users/ChangePassword`,
-  GET_USERS: `/Users/Manager`,
+  GET_USERS: `/Users/Manager`, 
   COUNT_USERS: `/Users/count`,
 };
 export const TASKS_URLS = {
-  GET_TASKS: `/Task`,
+  // GET_TASKS: `/Task`,
   GET_TASKS_MANAGER: `/Task/manager`,
   ADD_TASK: `/Task`,
   TASKS_COUNT: `/Task/count`,
   GET_TASK_BY_ID: (id: number) => `/Task/${id}`,
   UPDATE_TASK: (id: number) => `/Task/${id}`,
-  DELETE_TASK :(id:number) => `/Task/${id}`
+  DELETE_TASK: (id: number) => `/Task/${id}`,
 };
 export const PROJECTS_URLS = {
   GET_PROJECTS: `/Project/manager`,
@@ -36,4 +36,9 @@ export const PROJECTS_URLS = {
   GET_PROJECT: (id: number) => `/Project/${id}`,
   UPDATE_PROJECT: (id: number) => `/Project/${id}`,
   DELETE_PROJECT: (id: number) => `/Project/${id}`,
+};
+
+export const TASKSUSER_URLS = {
+  GET_TASKSUSER: `/Task`,
+  CHANGE_STATUS:(id:string) => `/Task/${id}/change-status`
 };

@@ -12,6 +12,8 @@ import {
   PROJECTS_URLS,
 } from '../../../../services/apisUrls/apisUrls';
 import DeleteConfirmation from '../../../shared/components/DeleteConfirmation/DeleteConfirmation';
+import Loading from '../../../shared/components/Loading/Loading';
+import NoData from '../../../shared/components/NoData/NoData';
 
 interface Task {
   id: number;
@@ -45,22 +47,54 @@ export default function ProjectsList() {
   //   setShowOptions((prev) => (prev === id ? null : id)); // Toggle menu for the specific project
   // };
   const [projects, setProjects] = useState<DataResponse[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const allProjects = async (title?: string) => {
+  //paganation
+
+  const [arrayOfPages, setArrayOfPages] = useState<number[]>([]);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
+
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+
+  const handlePageSize = (event) => {
+    setPageSize(parseInt(event.target.value, 10));
+    setPageNumber(1);
+  };
+
+  const handlePageNumber = (newPage) => {
+    setPageNumber(newPage);
+  };
+
+  const allProjects = async (
+    title?: string,
+    pageSize: number = 5,
+    pageNumber: number = 1,
+  ) => {
+    setLoading(true);
     try {
       const response = await axiosInstance.get<ProjectResponse>(
         PROJECTS_URLS.GET_PROJECTS,
-        { params: { title } },
+        { params: { title, pageSize, pageNumber } },
       );
-      console.log(response.data.data);
+      console.log(response.data);
       setProjects(response.data.data);
+      setTotalRecords(response.data.totalNumberOfRecords);
+      setArrayOfPages(
+        Array(response.data.totalNumberOfPages)
+          .fill()
+          .map((_, i) => i + 1),
+      );
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
+
   useEffect(() => {
-    allProjects();
-  }, []);
+    allProjects(undefined, pageSize, pageNumber);
+  }, [pageSize, pageNumber]);
 
   const projectsFilter = (input: React.ChangeEvent<HTMLInputElement>) => {
     allProjects(input.target.value);
@@ -90,8 +124,14 @@ export default function ProjectsList() {
       allProjects();
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -230,38 +270,54 @@ export default function ProjectsList() {
                 ))}
               </tbody>
             ) : (
-              <span className="text-4xl">no data</span>
+              <NoData />
             )}
           </table>
 
           <div className="py-8 flex justify-end items-center gap-5 w-full">
             <div className="flex justify-between items-center gap-4">
               <span className="text-[#4F4F4F]">Showing</span>
-              <select name="" id="" className="border-[1px] rounded-[24px] p-2">
-                <option value="" className="text-[#4F4F4F]">
+              <select
+                name=""
+                id=""
+                className="border-[1px] rounded-[24px] p-2"
+                onChange={handlePageSize}
+                value={pageSize}
+              >
+                <option value={15} className="text-[#4F4F4F]">
+                  15
+                </option>
+                <option value={10} className="text-[#4F4F4F]">
                   10
                 </option>
-                <option value="" className="text-[#4F4F4F]">
-                  9
-                </option>
-                <option value="" className="text-[#4F4F4F]">
-                  8
-                </option>
-                <option value="" className="text-[#4F4F4F]">
-                  7
-                </option>
-                <option value="" className="text-[#4F4F4F]">
-                  6
+                <option value={5} className="text-[#4F4F4F]">
+                  5
                 </option>
               </select>
-              <span className="text-[#4F4F4F]">of 102 Results</span>
+              <span className="text-[#4F4F4F]">of {totalRecords} Results</span>
             </div>
 
             <div className="flex justify-end items-center mr-5">
-              <span className="text-[#4F4F4F] mr-3">Page 1 of 10</span>
+              <span className="text-[#4F4F4F] mr-3">
+                Page{pageNumber} of {arrayOfPages.length}
+              </span>
               <div className="flex gap-5">
-                <FaChevronLeft className="text-[#4F4F4F]" />
-                <FaChevronRight className="text-[#4F4F4F]" />
+                <button
+                  onClick={() => {
+                    handlePageNumber(pageNumber - 1);
+                  }}
+                  disabled={pageNumber === 1}
+                >
+                  <FaChevronLeft className="text-[#4F4F4F]" />
+                </button>
+                <button
+                  onClick={() => {
+                    handlePageNumber(pageNumber + 1);
+                  }}
+                  disabled={pageNumber === arrayOfPages.length}
+                >
+                  <FaChevronRight className="text-[#4F4F4F]" />
+                </button>
               </div>
             </div>
           </div>

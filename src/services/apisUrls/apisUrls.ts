@@ -40,5 +40,5 @@ export const PROJECTS_URLS = {
 
 export const TASKSUSER_URLS = {
   GET_TASKSUSER: `/Task`,
- 
+  CHANGE_STATUS:(id:string) => `/Task/${id}/change-status`
 };

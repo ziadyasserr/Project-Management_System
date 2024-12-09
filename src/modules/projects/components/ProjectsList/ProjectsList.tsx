@@ -1,12 +1,14 @@
 // import React from 'react'
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { BiExpandVertical } from 'react-icons/bi';
 import { FaChevronLeft, FaChevronRight, FaPlus } from 'react-icons/fa';
 import { IoIosSearch } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 
+import { BsPencil, BsThreeDotsVertical, BsTrash } from 'react-icons/bs';
 import { toast } from 'react-toastify';
+import { AuthContext } from '../../../../context/AuthContext/AuthContext';
 import {
   axiosInstance,
   PROJECTS_URLS,
@@ -41,11 +43,19 @@ interface ProjectResponse {
 
 export default function ProjectsList() {
   const navigate = useNavigate();
-  // const [showOptions, setShowOptions] = useState<number | null>(null); // Track which menu is open
+  let { loginData } = useContext(AuthContext);
 
-  // const handleClick = (id: number) => {
-  //   setShowOptions((prev) => (prev === id ? null : id)); // Toggle menu for the specific project
-  // };
+  /////////////////option select////////////////////
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const toggleOptions = (id: number) => {
+    if (selectedId === id) {
+      setSelectedId(null);
+    } else {
+      setSelectedId(id);
+    }
+  };
+  /////////////////////////////////////////////////////
   const [projects, setProjects] = useState<DataResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -68,23 +78,38 @@ export default function ProjectsList() {
 
   const allProjects = async (
     title?: string,
-    pageSize: number = 5,
+    pageSize: number = 10,
     pageNumber: number = 1,
   ) => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get<ProjectResponse>(
-        PROJECTS_URLS.GET_PROJECTS,
-        { params: { title, pageSize, pageNumber } },
-      );
-      console.log(response.data);
-      setProjects(response.data.data);
-      setTotalRecords(response.data.totalNumberOfRecords);
-      setArrayOfPages(
-        Array(response.data.totalNumberOfPages)
-          .fill()
-          .map((_, i) => i + 1),
-      );
+      if (loginData?.userGroup == 'Manager') {
+        const response = await axiosInstance.get<ProjectResponse>(
+          PROJECTS_URLS.GET_PROJECTS,
+          { params: { title, pageSize, pageNumber } },
+        );
+        console.log(response.data);
+        setProjects(response.data.data);
+        setTotalRecords(response.data.totalNumberOfRecords);
+        setArrayOfPages(
+          Array(response.data.totalNumberOfPages)
+            .fill()
+            .map((_, i) => i + 1),
+        );
+      } else {
+        const response = await axiosInstance.get(
+          PROJECTS_URLS.GET_PROJECTS_EMPIOYEE,
+          { params: { title, pageSize, pageNumber } },
+        );
+        console.log(response.data);
+        setProjects(response.data.data);
+        setTotalRecords(response.data.totalNumberOfRecords);
+        setArrayOfPages(
+          Array(response.data.totalNumberOfPages)
+            .fill()
+            .map((_, i) => i + 1),
+        );
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -104,9 +129,7 @@ export default function ProjectsList() {
   const [projectId, setProjectId] = useState<number>(0);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  // const toggleModal = (id: number) => {
-  //   setProjectId(id);
-  // };
+
   const toggleModal = (id: number) => {
     setProjectId(id);
     setIsModalOpen(true);
@@ -147,15 +170,19 @@ export default function ProjectsList() {
       <div>
         <div className="title flex justify-between shadow-sm px-6 py-4 mb-6">
           <h3 className="text-[#4F4F4F] font-medium text-[28px]">Projects</h3>
-          <button
-            className="bg-primary text-white rounded-2xl py-2 px-6 text-center flex items-center gap-3"
-            onClick={() => navigate('/projects/new-project')}
-          >
-            <span>
-              <FaPlus />
-            </span>
-            Add New Project
-          </button>
+          {loginData?.userGroup == 'Manager' ? (
+            <button
+              className="bg-primary text-white rounded-2xl py-2 px-6 text-center flex items-center gap-3"
+              onClick={() => navigate('/projects/new-project')}
+            >
+              <span>
+                <FaPlus />
+              </span>
+              Add New Project
+            </button>
+          ) : (
+            ''
+          )}
         </div>
 
         <div className="relative overflow-x-auto shadow-xl sm:rounded-lg">
@@ -208,12 +235,16 @@ export default function ProjectsList() {
                     <BiExpandVertical className="text-base" />
                   </div>
                 </th>
-                <th
-                  scope="col"
-                  className="px-6 py-4 border-r-[1px] border-[#315951E5]  text-[14px] "
-                >
-                  <div className="flex items-center gap-6"></div>
-                </th>
+                {loginData?.userGroup == 'Manager' ? (
+                  <th
+                    scope="col"
+                    className="px-6 py-4 border-r-[1px] border-[#315951E5]  text-[14px] "
+                  >
+                    <div className="flex items-center gap-6"></div>
+                  </th>
+                ) : (
+                  ''
+                )}
               </tr>
             </thead>
 
@@ -248,24 +279,40 @@ export default function ProjectsList() {
                       {format(new Date(project.creationDate), 'yyyy-MM-dd')}
                     </td>
 
-                    <td
-                      scope="row"
-                      className="px-6 py-4 font-medium  whitespace-nowrap flex gap-5 text-white"
-                    >
-                      <button
-                        className=" bg-red-400"
-                        onClick={() => toggleModal(project.id)}
-                      >
-                        {' '}
-                        delete
-                      </button>
-                      <button
-                        className=" bg-red-800"
-                        onClick={() => navigate(`/projects/${project.id}`)}
-                      >
-                        update
-                      </button>
-                    </td>
+                    {loginData?.userGroup == 'Manager' ? (
+                      <td className="px-6 py-4 relative">
+                        <BsThreeDotsVertical
+                          className="text-black cursor-pointer"
+                          onClick={() => toggleOptions(project.id)}
+                        />
+                        {selectedId === project.id && (
+                          <div className="absolute bg-white border shadow-lg right-0 mr-2 mt-1 w-24 md:w-30 z-40">
+                            <ul className="space-y-1">
+                              <li>
+                                <button
+                                  className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"
+                                  onClick={() =>
+                                    navigate(`/projects/${project.id}`)
+                                  }
+                                >
+                                  <BsPencil className="mr-2" /> Edit
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                  className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"
+                                  onClick={() => toggleModal(project.id)}
+                                >
+                                  <BsTrash className="mr-2" /> Delete
+                                </button>
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                      </td>
+                    ) : (
+                      ''
+                    )}
                   </tr>
                 ))}
               </tbody>

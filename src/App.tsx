@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 import './App.css';
 
 import { ToastContainer } from 'react-toastify';
@@ -18,11 +18,11 @@ import NotFound from './modules/shared/components/NotFound/NotFound';
 import ProtectedRoute from './modules/shared/components/ProtectedRoute/ProtectedRoute';
 import TaskForm from './modules/tasks/components/TaskForm/TaskForm.js';
 import TasksList from './modules/tasks/components/TasksList/TasksList';
-import UsersList from './modules/users/components/UsersList/UsersList';
 import TaskUser from './modules/tasks/components/TaskUser/TaskUser.js';
+import UsersList from './modules/users/components/UsersList/UsersList';
 
 function App() {
-  const routes = createBrowserRouter([
+  const routes = createHashRouter([
     {
       path: '',
       element: <AuthLayout />,

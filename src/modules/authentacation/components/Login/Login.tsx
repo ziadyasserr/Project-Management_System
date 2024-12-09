@@ -29,7 +29,7 @@ export default function Login() {
   const navigate = useNavigate();
   const { saveLoginData } = useContext(AuthContext);
   const {
-    register,
+    register, 
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
@@ -37,10 +37,8 @@ export default function Login() {
   const onSubmit = async (data: loginData) => {
     // console.log(data);
     try {
-      const response = await publicAxiosInstance.post<LoginResponse>(
-        USERS_URLS.LOGIN,
-        data,
-      );
+      const response = await publicAxiosInstance.post<LoginResponse>(USERS_URLS.LOGIN, data);
+     
       localStorage.setItem('token', response.data.token);
       saveLoginData();
       // console.log(response);

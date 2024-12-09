@@ -1,15 +1,17 @@
 import { format } from 'date-fns';
-import React, { useEffect, useState } from 'react';
-import { BsEye, BsPencil, BsThreeDotsVertical, BsTrash } from 'react-icons/bs';
+import React, { useContext, useEffect, useState } from 'react';
+import { BsPencil, BsThreeDotsVertical, BsTrash } from 'react-icons/bs';
 import { FaChevronLeft, FaChevronRight, FaPlus } from 'react-icons/fa';
 import { IoIosSearch } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import noDataPhoto from '../../../../assets/nodatafound.png';
+import { AuthContext } from '../../../../context/AuthContext/AuthContext';
 import {
   axiosInstance,
   TASKS_URLS,
 } from '../../../../services/apisUrls/apisUrls';
 import DeleteConfirmation from '../../../shared/components/DeleteConfirmation/DeleteConfirmation';
+import Loading from '../../../shared/components/Loading/Loading';
 
 interface DataResponse {
   id: number;
@@ -28,6 +30,7 @@ interface DataResponse {
 }
 
 export default function TasksList() {
+  const { loginData } = useContext(AuthContext);
   const navigate = useNavigate();
   const [tasks, setTasks] = useState<DataResponse[]>([]);
   const [nameValue, setNameValue] = useState('');
@@ -37,6 +40,7 @@ export default function TasksList() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
   const toggleOptions = (id: number) => {
     if (selectedId === id) {
       setSelectedId(null);
@@ -52,7 +56,7 @@ export default function TasksList() {
   ) => {
     try {
       const response = await axiosInstance.get(TASKS_URLS.GET_TASKS_MANAGER, {
-        params: { title: title, pageNumber: pageNumber, pageSize: pageSize },
+        params: { title, pageNumber, pageSize},
       });
       setArrayOfPages(
         Array(response.data.totalNumberOfPages)
@@ -63,6 +67,8 @@ export default function TasksList() {
       console.log(response.data.data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,10 +103,25 @@ export default function TasksList() {
     setPageNumber(newPage);
   };
 
+
+  useEffect(() => {
+    if (loginData) {
+      if (loginData?.userGroup == 'Manager') {
+        getAllTasks(nameValue, pageNumber, pageSize);
+      } else {
+        navigate('/login');
+      }
+    }
+  }, [loginData, navigate]);
+  
+
   useEffect(() => {
     getAllTasks(nameValue, pageNumber, pageSize);
   }, [nameValue, pageNumber, pageSize]);
 
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <div>
       <div>
@@ -207,11 +228,11 @@ export default function TasksList() {
                     {selectedId === task.id && (
                       <div className="absolute bg-white border shadow-lg right-0 mr-2 mt-1 w-24 md:w-30 z-40">
                         <ul className="space-y-1">
-                          <li>
+                          {/* <li>
                             <button className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center">
                               <BsEye className="mr-2" /> View
                             </button>
-                          </li>
+                          </li> */}
                           <li>
                             <button
                               className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"

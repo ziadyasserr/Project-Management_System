@@ -32,6 +32,7 @@ export const TASKS_URLS = {
 };
 export const PROJECTS_URLS = {
   GET_PROJECTS: `/Project/manager`,
+  GET_PROJECTS_EMPIOYEE: `/Project/employee`,
   CREATE_PROJECT: `/Project`,
   GET_PROJECT: (id: number) => `/Project/${id}`,
   UPDATE_PROJECT: (id: number) => `/Project/${id}`,

@@ -19,6 +19,7 @@ import ProtectedRoute from './modules/shared/components/ProtectedRoute/Protected
 import TaskForm from './modules/tasks/components/TaskForm/TaskForm.js';
 import TasksList from './modules/tasks/components/TasksList/TasksList';
 import UsersList from './modules/users/components/UsersList/UsersList';
+import TaskUser from './modules/tasks/components/TaskUser/TaskUser.js';
 
 function App() {
   const routes = createBrowserRouter([
@@ -51,6 +52,7 @@ function App() {
         { path: 'projects/new-project', element: <ProjectForm /> },
         { path: 'projects/:projectId', element: <ProjectForm /> },
         { path: 'tasks', element: <TasksList /> },
+        { path: 'tasks-user', element: <TaskUser /> },
         { path: 'task/new-task', element: <TaskForm /> },
         { path: 'task/:taskId', element: <TaskForm /> },
         { path: 'users', element: <UsersList /> },

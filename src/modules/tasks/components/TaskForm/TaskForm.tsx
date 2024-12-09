@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { MdKeyboardArrowLeft } from "react-icons/md";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { GetRequiredMessage } from "../../../../services/validation/validation";
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { MdKeyboardArrowLeft } from 'react-icons/md';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
   axiosInstance,
   PROJECTS_URLS,
   TASKS_URLS,
   USERS_URLS,
-} from "../../../../services/apisUrls/apisUrls";
-import { toast } from "react-toastify";
+} from '../../../../services/apisUrls/apisUrls';
+import { GetRequiredMessage } from '../../../../services/validation/validation';
 interface TaskData {
   id: number;
   title: string;
@@ -32,6 +32,8 @@ export default function TaskForm() {
   const params = useParams();
   const [projects, setProjects] = useState<Project[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
+
   const navigate = useNavigate();
   const taskId = params.taskId;
   const {
@@ -46,12 +48,12 @@ export default function TaskForm() {
       const getTaskByID = async () => {
         try {
           const response = await axiosInstance.get(
-            TASKS_URLS.GET_TASK_BY_ID(taskId)
+            TASKS_URLS.GET_TASK_BY_ID(taskId),
           );
-          setValue("title", response.data.title);
-          setValue("description", response.data.description);
+          setValue('title', response.data.title);
+          setValue('description', response.data.description);
         } catch (error) {
-          console.error("Error fetching task:", error);
+          console.error('Error fetching task:', error);
         }
       };
       getTaskByID();
@@ -59,38 +61,46 @@ export default function TaskForm() {
   }, [taskId, setValue]);
 
   useEffect(() => {
-    const allProjects = async () => {
+    const allProjects = async (pageNumber: number, pageSize: number) => {
       try {
-        const response = await axiosInstance.get(PROJECTS_URLS.GET_PROJECTS);
+        const response = await axiosInstance.get(PROJECTS_URLS.GET_PROJECTS, {
+          params: { pageNumber, pageSize },
+        });
         setProjects(response.data.data);
       } catch (error) {
-        console.error("Error fetching projects:", error);
+        console.error('Error fetching projects:', error);
       }
     };
 
-    const allUsers = async () => {
+    const allUsers = async (pageNumber: number, pageSize: number) => {
       try {
-        const response = await axiosInstance.get(USERS_URLS.GET_USERS);
+        const response = await axiosInstance.get(USERS_URLS.GET_USERS, {
+          params: { pageNumber, pageSize },
+        });
+        setTotalRecords(response.data.totalNumberOfRecords);
         setUsers(response.data.data);
+        // console.log('zzzzzzzzzzz', response.data.totalNumberOfRecords);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error('Error fetching users:', error);
       }
     };
-    allProjects();
-    allUsers();
+    (async () => {
+      await allUsers(1, 50);
+      await allProjects(1, 50);
+    })();
   }, []);
 
   const onSubmit = async (data: TaskData) => {
     try {
-      const response = await axiosInstance[taskId ? "put" : "post"](
+      const response = await axiosInstance[taskId ? 'put' : 'post'](
         taskId ? TASKS_URLS.UPDATE_TASK(taskId) : TASKS_URLS.ADD_TASK,
-        data
+        data,
       );
-      navigate("/tasks");
-      toast.success(taskId ? "Task updated" : "Task added");
+      navigate('/tasks');
+      toast.success(taskId ? 'Task updated' : 'Task added');
     } catch (error) {
-      toast.error("Failed to save task");
-      console.error("Submit error:", error);
+      toast.error('Failed to save task');
+      console.error('Submit error:', error);
     }
   };
 
@@ -99,7 +109,7 @@ export default function TaskForm() {
       <div className="shadow-sm px-6 py-4">
         <div
           className="flex items-center cursor-pointer"
-          onClick={() => navigate("/tasks")}
+          onClick={() => navigate('/tasks')}
         >
           <MdKeyboardArrowLeft />
           <p className="text-sm tracking-wide capitalize text-[#0E382F]">
@@ -107,7 +117,7 @@ export default function TaskForm() {
           </p>
         </div>
         <h2 className="tracking-wide text-2xl capitalize font-semibold mt-2 text-[#0E382F]">
-          {taskId ? "Update Task" : "Add a New Task"}
+          {taskId ? 'Update Task' : 'Add a New Task'}
         </h2>
       </div>
       <div className="md:mx-24 md:my-10 shadow-2xl rounded-3xl">
@@ -120,7 +130,7 @@ export default function TaskForm() {
               type="text"
               placeholder="Enter title"
               className="block w-full p-4 border rounded-2xl"
-              {...register("title", { required: GetRequiredMessage("Title") })}
+              {...register('title', { required: GetRequiredMessage('Title') })}
             />
             {errors.title && (
               <span className="text-red-500">{errors.title.message}</span>
@@ -134,8 +144,8 @@ export default function TaskForm() {
               type="text"
               placeholder="Enter description"
               className="block w-full p-4 border rounded-2xl"
-              {...register("description", {
-                required: GetRequiredMessage("Description"),
+              {...register('description', {
+                required: GetRequiredMessage('Description'),
               })}
             />
             {errors.description && (
@@ -146,12 +156,14 @@ export default function TaskForm() {
             <div className="flex flex-col">
               <label className="mb-2">User</label>
               <select
-                {...register("employeeId", {
-                  required: GetRequiredMessage("User"),
+                {...register('employeeId', {
+                  required: GetRequiredMessage('User'),
                 })}
                 className="p-4 w-full border rounded-2xl"
               >
-                <option value="" disabled>Select a user</option>
+                <option value="" disabled>
+                  Select a user
+                </option>
 
                 {users.map(({ userName, id }) => (
                   <option value={id} key={id}>
@@ -168,12 +180,14 @@ export default function TaskForm() {
             <div className="flex flex-col">
               <label className="mb-2">Project</label>
               <select
-                {...register("projectId", {
-                  required: GetRequiredMessage("Project"),
+                {...register('projectId', {
+                  required: GetRequiredMessage('Project'),
                 })}
                 className="p-4 w-full border rounded-2xl"
               >
-                <option value="" disabled>Select a project</option>
+                <option value="" disabled>
+                  Select a project
+                </option>
                 {projects.map(({ id, title }) => (
                   <option value={id} key={id}>
                     {title}
@@ -197,7 +211,7 @@ export default function TaskForm() {
               className="bg-[#0E382F] hover:bg-[#0E382F] md:px-8 px-4 py-3 text-white rounded-full"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Saving..." : "Save"}
+              {isSubmitting ? 'Saving...' : 'Save'}
             </button>
           </div>
         </form>

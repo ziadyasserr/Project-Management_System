@@ -4,6 +4,8 @@ import { BsListTask } from 'react-icons/bs';
 import { GiProgression } from 'react-icons/gi';
 import { GoProjectSymlink } from 'react-icons/go';
 
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js';
+import { Pie } from 'react-chartjs-2';
 import header from '../../../assets/header.png';
 import { AuthContext } from '../../../context/AuthContext/AuthContext';
 import {
@@ -11,6 +13,7 @@ import {
   TASKS_URLS,
   USERS_URLS,
 } from '../../../services/apisUrls/apisUrls';
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface UsersCount {
   activatedEmployeeCount: number;
@@ -35,6 +38,47 @@ export default function Dashboard() {
     done: 0,
   });
 
+  // Pie chart data for tasks
+  const tasksData = {
+    labels: ['ToDo', 'InProgress', 'Done'],
+    datasets: [
+      {
+        data: [taskState.toDo, taskState.inProgress, taskState.done],
+        backgroundColor: ['#e6e7f5', '#f5f5e6', '#f5e6ee'],
+        hoverBackgroundColor: ['#b5b6d1', '#c2c2a3', '#cbb4c0'],
+      },
+    ],
+  };
+
+  // Pie chart data for users
+  const usersData = {
+    labels: ['Activated', 'Deactivated'],
+    datasets: [
+      {
+        data: [
+          userState.activatedEmployeeCount,
+          userState.deactivatedEmployeeCount,
+        ],
+        backgroundColor: ['#e6e7f5', '#f5f5e6'],
+        hoverBackgroundColor: ['#b5b6d1', '#c2c2a3'],
+      },
+    ],
+  };
+
+  // Options for the charts
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Distribution',
+      },
+    },
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -50,7 +94,9 @@ export default function Dashboard() {
 
     (async () => {
       try {
-        const response =await axiosInstance.get<TasksCount>(TASKS_URLS.TASKS_COUNT);
+        const response = await axiosInstance.get<TasksCount>(
+          TASKS_URLS.TASKS_COUNT,
+        );
         console.log(response.data);
         setTaskState(response.data);
       } catch (error) {
@@ -82,7 +128,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <div className="grid md:grid-cols-8 grid-cols-2 mt-10 gap-10 ">
+      <div className="grid md:grid-cols-8 grid-cols-2 mt-10 gap-10 mb-16 ">
         <div className="md:col-span-4 col-span-2 bg-[#F8F9FB] p-6 rounded-2xl ">
           <div className=" border-l-4  border-primary ">
             <span className="block font-semibold tracking-wide ms-5">
@@ -92,6 +138,7 @@ export default function Dashboard() {
               Lorem ipsum dolor sit amet,consecteture
             </span>
           </div>
+
           <div className="mt-6 grid grid-cols-6 gap-5">
             <div className="md:col-span-2 col-span-3">
               <div className="bg-[#E5E6F4] rounded-xl  p-4">
@@ -105,9 +152,11 @@ export default function Dashboard() {
             <div className="md:col-span-2 col-span-3 ">
               <div className="bg-[#F4F4E5] rounded-xl  p-4">
                 <BsListTask className="text-3xl   bg-[#E4E4BC] rounded-xl " />
-                <span className="block text-[#6F7881] my-1">Tasks Progress</span>
+                <span className="block text-[#6F7881] my-1">
+                  Tasks Progress
+                </span>
                 <span className="block text-black text-lg tracking-wider">
-                {taskState.inProgress}
+                  {taskState.inProgress}
                 </span>
               </div>
             </div>
@@ -116,42 +165,58 @@ export default function Dashboard() {
                 <GoProjectSymlink className="text-3xl   bg-[#E7C3D7] rounded-xl " />
                 <span className="block text-[#6F7881] my-1">Tasks Done</span>
                 <span className="block text-black text-lg tracking-wider">
-                {taskState.done}
+                  {taskState.done}
                 </span>
               </div>
+            </div>
+          </div>
+
+          <div className=" my-10 flex justify-center items-center w-full ">
+            <div className="w-[300px] h-[300px] ">
+              <Pie data={tasksData} options={options} />
             </div>
           </div>
         </div>
-        <div className="md:col-span-4  col-span-2 bg-[#F8F9FB] p-6 rounded-2xl ">
-          <div className="border-l-4  border-primary">
-            <span className="block font-semibold tracking-wide ms-5">
-              Users
-            </span>
-            <span className="block text-gray-500 ms-5">
-              Lorem ipsum dolor sit amet,consecteture
-            </span>
-          </div>
-          <div className="mt-6 grid grid-cols-6 gap-5">
-            <div className="md:col-span-2 col-span-3 ">
-              <div className="bg-[#E5E6F4] rounded-xl  p-4">
-                <GiProgression className="text-3xl   bg-[#CFD1EC] rounded-xl " />
-                <span className="block text-[#6F7881] my-1">Active</span>
-                <span className="block text-black text-lg tracking-wider">
-                  {userState.activatedEmployeeCount}
-                </span>
+
+        {loginData?.userGroup == 'Manager' ? (
+          <div className="md:col-span-4  col-span-2 bg-[#F8F9FB] p-6 rounded-2xl ">
+            <div className="border-l-4  border-primary">
+              <span className="block font-semibold tracking-wide ms-5">
+                Users
+              </span>
+              <span className="block text-gray-500 ms-5">
+                Lorem ipsum dolor sit amet,consecteture
+              </span>
+            </div>
+            <div className="mt-6 grid grid-cols-6 gap-5">
+              <div className="md:col-span-2 col-span-3 ">
+                <div className="bg-[#E5E6F4] rounded-xl  p-4">
+                  <GiProgression className="text-3xl   bg-[#CFD1EC] rounded-xl " />
+                  <span className="block text-[#6F7881] my-1">Active</span>
+                  <span className="block text-black text-lg tracking-wider">
+                    {userState.activatedEmployeeCount}
+                  </span>
+                </div>
+              </div>
+              <div className="md:col-span-2 col-span-3 ">
+                <div className="bg-[#F4F4E5] rounded-xl  p-4">
+                  <BsListTask className="text-3xl   bg-[#E4E4BC] rounded-xl " />
+                  <span className="block text-[#6F7881] my-1">Inactive</span>
+                  <span className="block text-black text-lg tracking-wider">
+                    {userState.deactivatedEmployeeCount}
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="md:col-span-2 col-span-3 ">
-              <div className="bg-[#F4F4E5] rounded-xl  p-4">
-                <BsListTask className="text-3xl   bg-[#E4E4BC] rounded-xl " />
-                <span className="block text-[#6F7881] my-1">Inactive</span>
-                <span className="block text-black text-lg tracking-wider">
-                  {userState.deactivatedEmployeeCount}
-                </span>
+            <div className=" my-10 flex justify-center items-center w-full ">
+              <div className="w-[300px] h-[300px] ">
+                <Pie data={usersData} options={options} />
               </div>
             </div>
           </div>
-        </div>
+        ) : (
+          ''
+        )}
       </div>
     </>
   );

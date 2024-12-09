@@ -21,7 +21,7 @@ interface loginData {
 
 interface LoginResponse {
   token: string;
-  message: string;
+  message: string;
 }
 
 export default function Login() {
@@ -38,6 +38,7 @@ export default function Login() {
     // console.log(data);
     try {
       const response = await publicAxiosInstance.post<LoginResponse>(USERS_URLS.LOGIN, data);
+     
       localStorage.setItem('token', response.data.token);
       saveLoginData();
       // console.log(response);

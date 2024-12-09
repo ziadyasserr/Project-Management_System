@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import {
   axiosInstance,
   TASKSUSER_URLS,
-} from "../../../../services/apisUrls/apisUrls";
-import { motion } from "framer-motion";
-type Status = "ToDo" | "InProgress" | "Done";
+} from '../../../../services/apisUrls/apisUrls';
+type Status = 'ToDo' | 'InProgress' | 'Done';
 interface TaskAsigned {
   id: number;
   title: string;
@@ -23,10 +23,11 @@ interface DataTaskAsignedResponse {
 export default function TaskUser() {
   const [tasksAssigned, setTasksAssigned] = useState<TaskAsigned[]>([]);
 
-  const getAllAssignedTasks = async () => {
+  const getAllAssignedTasks = async (pageNumber: number=1, pageSize: number=20) => {
     try {
       const response = await axiosInstance.get<DataTaskAsignedResponse>(
-        TASKSUSER_URLS.GET_TASKSUSER
+        TASKSUSER_URLS.GET_TASKSUSER,
+        { params: { pageNumber, pageSize } },
       );
       console.log(response);
       setTasksAssigned(response.data.data);
@@ -36,15 +37,15 @@ export default function TaskUser() {
   };
 
   useEffect(() => {
-    getAllAssignedTasks();
+    getAllAssignedTasks(1, 20);
   }, []);
 
-  const tasksToDo = tasksAssigned.filter(({ status }) => status == "ToDo");
+  const tasksToDo = tasksAssigned.filter(({ status }) => status == 'ToDo');
 
   const tasksInProgress = tasksAssigned.filter(
-    ({ status }) => status == "InProgress"
+    ({ status }) => status == 'InProgress',
   );
-  const tasksDone = tasksAssigned.filter(({ status }) => status == "Done");
+  const tasksDone = tasksAssigned.filter(({ status }) => status == 'Done');
 
   return (
     <>
@@ -89,7 +90,7 @@ const Column = ({
   refetchTasks: () => Promise<void>;
   setTasksAssigned: React.Dispatch<React.SetStateAction<TaskAsigned[]>>;
 }) => {
-  const [background, setBackground] = useState("rgba(49, 89, 81, 0.9)");
+  const [background, setBackground] = useState('rgba(49, 89, 81, 0.9)');
   const changeStatus = async (id: string, status: string) => {
     try {
       let response = await axiosInstance.put(TASKSUSER_URLS.CHANGE_STATUS(id), {
@@ -112,12 +113,12 @@ const Column = ({
         key={title}
         className="  w-full h-full flex flex-col gap-5 pt-10 px-3 rounded-xl "
         style={{ backgroundColor: background }}
-        onMouseEnter={() => setBackground("rgba(49, 89, 81, 1)")}
-        onMouseLeave={() => setBackground("rgba(49, 89, 81, 0.9)")}
+        onMouseEnter={() => setBackground('rgba(49, 89, 81, 1)')}
+        onMouseLeave={() => setBackground('rgba(49, 89, 81, 0.9)')}
         onDrop={async (e) => {
           e.preventDefault();
-          const id = e.dataTransfer.getData("taskId");
-          const prevStatus = e.dataTransfer.getData("prevstatus");
+          const id = e.dataTransfer.getData('taskId');
+          const prevStatus = e.dataTransfer.getData('prevstatus');
           if (prevStatus != title) {
             setTasksAssigned((prevTasks) => {
               const newTask = prevTasks.map((task) => {
@@ -146,8 +147,8 @@ const Column = ({
             className=" bg-[#EF9B28] capitalize text-[#FFFFFF] text-lg py-3 px-3 rounded-xl"
             key={id}
             onDragStart={(e) => {
-              e.dataTransfer.setData("taskId", id.toString());
-              e.dataTransfer.setData("prevStatus", title);
+              e.dataTransfer.setData('taskId', id.toString());
+              e.dataTransfer.setData('prevStatus', title);
             }}
           >
             <span>{taskTitle}</span>

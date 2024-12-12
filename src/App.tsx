@@ -3,10 +3,10 @@ import './App.css';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ChangePassword from './modules/authentacation/components/ChangePassword/ChangePassword';
+// import ChangePassword from './modules/authentacation/components/ChangePassword/ChangePassword';
 import ForgetPassword from './modules/authentacation/components/ForgetPassword/ForgetPassword';
 import Login from './modules/authentacation/components/Login/Login';
-import Register from './modules/authentacation/components/Register/Register';
+// import Register from './modules/authentacation/components/Register/Register';
 import ResetPassword from './modules/authentacation/components/ResetPassword/ResetPassword';
 import Verify from './modules/authentacation/components/Verify/Verify';
 import Dashboard from './modules/dashboard/components/Dashboard';
@@ -30,9 +30,9 @@ function App() {
       children: [
         { index: true, element: <Login /> },
         { path: 'login', element: <Login /> },
-        { path: 'register', element: <Register /> },
+        // { path: 'register', element: <Register /> },
         { path: 'verify', element: <Verify /> },
-        { path: 'change-password', element: <ChangePassword /> },
+        // { path: 'change-password', element: <ChangePassword /> },
         { path: 'forget-password', element: <ForgetPassword /> },
         { path: 'reset-password', element: <ResetPassword /> },
       ],

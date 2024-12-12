@@ -18,9 +18,16 @@ export const USERS_URLS = {
   REGISTER: `/Users/Register`,
   VERIFY: `/Users/verify`,
   CHANGE_PASSWORD: `/Users/ChangePassword`,
-  GET_USERS: `/Users/Manager`, 
+  GET_USERS:`/Users/Manager`,
+
+   GET_UsersUrls:`Users/Manager`,
+  TOGGLE_STATUS_URLS:(id:number)=>`Users/${id}`,
   COUNT_USERS: `/Users/count`,
+
 };
+
+
+
 export const TASKS_URLS = {
   // GET_TASKS: `/Task`,
   GET_TASKS_MANAGER: `/Task/manager`,

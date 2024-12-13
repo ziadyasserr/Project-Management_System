@@ -19,7 +19,7 @@
 }
 
 .css-1t8x7v1 > .ps-menu-button:hover {
-  background-color: #164d41 !important;
+  background-color: inherit !important;
 }
 
 input:-webkit-autofill {
@@ -31,4 +31,11 @@ input:-webkit-autofill {
 
 input:-webkit-autofill::first-line {
   color: white !important;
+}
+
+
+.ps-menuitem-root.ps-active {
+  
+  background-color: #EF9B28; /* Active background */
+  color: white; /* Active text color */
 }

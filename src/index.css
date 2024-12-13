@@ -15,11 +15,10 @@
   position: sticky !important;
   top: 0 !important;
   left: 0 !important;
-
 }
 
 .css-1t8x7v1 > .ps-menu-button:hover {
-  background-color: inherit !important;
+  background-color: initial !important;
 }
 
 input:-webkit-autofill {
@@ -33,9 +32,7 @@ input:-webkit-autofill::first-line {
   color: white !important;
 }
 
-
 .ps-menuitem-root.ps-active {
-  
-  background-color: #EF9B28; /* Active background */
-  color: white; /* Active text color */
+  background-color: rgba(239, 155, 40, 0.3); /* Active background */
+  color: rgba(239, 155, 40, 1); /* Active text color */
 }

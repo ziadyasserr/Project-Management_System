@@ -40,6 +40,8 @@ export default function TasksList() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
+
   const [loading, setLoading] = useState(true);
   const toggleOptions = (id: number) => {
     if (selectedId === id) {
@@ -65,6 +67,7 @@ export default function TasksList() {
       );
       setTasks(response.data.data);
       console.log(response.data.data);
+      setTotalRecords(response.data.totalNumberOfRecords);
     } catch (error) {
       console.error(error);
     } finally {
@@ -290,7 +293,7 @@ export default function TasksList() {
               4
             </option>
           </select>
-          <span className="text-[#4F4F4F]">of {tasks.length} Results</span>
+          <span className="text-[#4F4F4F]">of {totalRecords} Results</span>
         </div>
 
         <div className="flex justify-end items-center mr-5">

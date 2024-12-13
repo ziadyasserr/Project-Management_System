@@ -119,13 +119,13 @@ export default function ProjectsList() {
   // useEffect(() => {
   //   allProjects(undefined, pageSize, pageNumber);
   // }, [pageSize, pageNumber]);
-  
+
   useEffect(() => {
     // Check if loginData is available
     if (loginData) {
       allProjects(undefined, pageSize, pageNumber);
     } else {
-      console.log("Waiting for login data...");
+      console.log('Waiting for login data...');
     }
   }, [loginData, pageSize, pageNumber]);
 
@@ -155,7 +155,7 @@ export default function ProjectsList() {
       allProjects();
     } catch (error) {
       console.log(error);
-    } 
+    }
     // finally {
     //   setLoading(false);
     // }
@@ -338,12 +338,21 @@ export default function ProjectsList() {
                 onChange={handlePageSize}
                 value={pageSize}
               >
-                <option value={15} className="text-[#4F4F4F]">
-                  15
-                </option>
-                <option value={10} className="text-[#4F4F4F]">
-                  10
-                </option>
+                {totalRecords > 15 ? (
+                  <option value={15} className="text-[#4F4F4F]">
+                    15
+                  </option>
+                ) : (
+                  ''
+                )}
+                {totalRecords > 15 ? (
+                  <option value={10} className="text-[#4F4F4F]">
+                    10
+                  </option>
+                ) : (
+                  ''
+                )}
+
                 <option value={5} className="text-[#4F4F4F]">
                   5
                 </option>

@@ -1,4 +1,4 @@
-import { createHashRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, createHashRouter, RouterProvider } from 'react-router-dom';
 import './App.css';
 
 import { ToastContainer } from 'react-toastify';
@@ -20,9 +20,11 @@ import TaskForm from './modules/tasks/components/TaskForm/TaskForm.js';
 import TasksList from './modules/tasks/components/TasksList/TasksList';
 import TaskUser from './modules/tasks/components/TaskUser/TaskUser.js';
 import UsersList from './modules/users/components/UsersList/UsersList';
+import Register from './modules/authentacation/components/Register/Register.js';
+import ChangePassword from './modules/authentacation/components/ChangePassword/ChangePassword.js';
 
 function App() {
-  const routes = createHashRouter([
+  const routes = createBrowserRouter([
     {
       path: '',
       element: <AuthLayout />,
@@ -30,9 +32,9 @@ function App() {
       children: [
         { index: true, element: <Login /> },
         { path: 'login', element: <Login /> },
-        // { path: 'register', element: <Register /> },
+        { path: 'register', element: <Register /> },
         { path: 'verify', element: <Verify /> },
-        // { path: 'change-password', element: <ChangePassword /> },
+        { path: 'change-password', element: <ChangePassword /> },
         { path: 'forget-password', element: <ForgetPassword /> },
         { path: 'reset-password', element: <ResetPassword /> },
       ],

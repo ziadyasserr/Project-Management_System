@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { BiExpandVertical } from 'react-icons/bi';
 import { FaChevronLeft, FaChevronRight, FaPlus } from 'react-icons/fa';
 import { IoIosSearch } from 'react-icons/io';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 import {
   axiosInstance,
@@ -141,9 +141,9 @@ export default function UsersList() {
                     </td>
                     <td
                       scope="row"
-                      className="px-6 py-4 font-medium text-[#4F4F4F] whitespace-nowrap"
+                      className="px-6 py-4 font-medium text-[#4F4F4F] whitespace-nowrap "
                     >
-                      {user.isActivated?<span className='bg-red-700 text-[#F5F5F5] p-3 rounded-lg rounded px-10'>Not Active</span>:<span className='bg-green-700 rounded-lg px-10 rounded text-[#F5F5F5] p-3'>Active</span>}
+                      {user.isActivated?<span className='bg-red-700 text-[#F5F5F5] p-3  rounded px-10 w-5'>Not Active</span>:<span className='bg-green-700  px-10 rounded text-[#F5F5F5] p-3'>Active</span>}
                      
                     </td>
                     <td

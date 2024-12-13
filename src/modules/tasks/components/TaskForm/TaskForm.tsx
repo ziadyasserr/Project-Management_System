@@ -85,8 +85,8 @@ export default function TaskForm() {
       }
     };
     (async () => {
-      await allUsers(1, 50);
-      await allProjects(1, 50);
+      await allUsers(1, 1000);
+      await allProjects(1, 1000);
     })();
   }, []);
 
@@ -161,8 +161,8 @@ export default function TaskForm() {
                 })}
                 className="p-4 w-full border rounded-2xl"
               >
-                <option value="" disabled>
-                  Select a user
+                <option value="" selected disabled>
+                  Select a user ...
                 </option>
 
                 {users.map(({ userName, id }) => (
@@ -185,8 +185,8 @@ export default function TaskForm() {
                 })}
                 className="p-4 w-full border rounded-2xl"
               >
-                <option value="" disabled>
-                  Select a project
+                <option value="" selected disabled>
+                  Select a project ...
                 </option>
                 {projects.map(({ id, title }) => (
                   <option value={id} key={id}>

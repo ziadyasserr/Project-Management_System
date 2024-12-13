@@ -48,7 +48,7 @@ export default function Verify() {
             <input
               type="email"
               placeholder="Enter your E-mail"
-              className="bg-inherit placeholder-white pb-2 border-b  border-gray-400 w-full placeholder:tracking-wide focus:outline-none text-white "
+              className="bg-inherit placeholder-gray-400 pb-2 border-b  border-gray-400 w-full placeholder:tracking-wide focus:outline-none text-white "
               {...register('email', EMAIL_VALIDATION)}
             />
             {errors?.email && (
@@ -61,7 +61,7 @@ export default function Verify() {
             <input
               type="text"
               placeholder="OTP code"
-              className="bg-inherit placeholder-white pb-2 border-b  border-gray-400 w-full placeholder:tracking-wide focus:outline-none text-white"
+              className="bg-inherit placeholder-gray-400 pb-2 border-b  border-gray-400 w-full placeholder:tracking-wide focus:outline-none text-white"
               {...register('code')}
             />
             {errors?.code && (

@@ -93,7 +93,7 @@ const Column = ({
   const [background, setBackground] = useState('rgba(49, 89, 81, 0.9)');
   const changeStatus = async (id: string, status: string) => {
     try {
-      let response = await axiosInstance.put(TASKSUSER_URLS.CHANGE_STATUS(id), {
+      const response = await axiosInstance.put(TASKSUSER_URLS.CHANGE_STATUS(id), {
         status,
       });
       await refetchTasks();

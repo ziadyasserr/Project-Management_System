@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 import { BiExpandVertical } from 'react-icons/bi';
 import { FaChevronLeft, FaChevronRight, FaPlus } from 'react-icons/fa';
 import { IoIosSearch } from 'react-icons/io';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { BsPencil, BsThreeDotsVertical, BsTrash } from 'react-icons/bs';
 import { toast } from 'react-toastify';
@@ -81,7 +81,6 @@ export default function ProjectsList() {
     pageSize: number = 10,
     pageNumber: number = 1,
   ) => {
-    setLoading(true);
     try {
       if (loginData?.userGroup == 'Manager') {
         const response = await axiosInstance.get<ProjectResponse>(
@@ -89,7 +88,7 @@ export default function ProjectsList() {
           { params: { title, pageSize, pageNumber } },
         );
         console.log(response.data);
-        setProjects(response.data.data);
+        setProjects(response?.data?.data);
         setTotalRecords(response.data.totalNumberOfRecords);
         setArrayOfPages(
           Array(response.data.totalNumberOfPages)
@@ -97,12 +96,12 @@ export default function ProjectsList() {
             .map((_, i) => i + 1),
         );
       } else {
-        const response = await axiosInstance.get(
+        const response = await axiosInstance.get<ProjectResponse>(
           PROJECTS_URLS.GET_PROJECTS_EMPIOYEE,
           { params: { title, pageSize, pageNumber } },
         );
         console.log(response.data);
-        setProjects(response.data.data);
+        setProjects(response?.data?.data);
         setTotalRecords(response.data.totalNumberOfRecords);
         setArrayOfPages(
           Array(response.data.totalNumberOfPages)
@@ -117,9 +116,18 @@ export default function ProjectsList() {
     }
   };
 
+  // useEffect(() => {
+  //   allProjects(undefined, pageSize, pageNumber);
+  // }, [pageSize, pageNumber]);
+  
   useEffect(() => {
-    allProjects(undefined, pageSize, pageNumber);
-  }, [pageSize, pageNumber]);
+    // Check if loginData is available
+    if (loginData) {
+      allProjects(undefined, pageSize, pageNumber);
+    } else {
+      console.log("Waiting for login data...");
+    }
+  }, [loginData, pageSize, pageNumber]);
 
   const projectsFilter = (input: React.ChangeEvent<HTMLInputElement>) => {
     allProjects(input.target.value);
@@ -147,9 +155,10 @@ export default function ProjectsList() {
       allProjects();
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    } 
+    // finally {
+    //   setLoading(false);
+    // }
   };
 
   if (loading) {
@@ -289,14 +298,12 @@ export default function ProjectsList() {
                           <div className="absolute bg-white border shadow-lg right-0 mr-2 mt-1 w-24 md:w-30 z-40">
                             <ul className="space-y-1">
                               <li>
-                                <button
+                                <Link
                                   className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"
-                                  onClick={() =>
-                                    navigate(`/projects/${project.id}`)
-                                  }
+                                  to={`/projects/${project.id}`}
                                 >
                                   <BsPencil className="mr-2" /> Edit
-                                </button>
+                                </Link>
                               </li>
                               <li>
                                 <button

@@ -267,10 +267,7 @@ export default function TasksList() {
             className="w-[450px] h-[250px] text-center flex justify-center items-center mx-auto"
           />
         )}
-        <div className="py-8 flex justify-end items-center gap-5 w-full"></div>
-      </div>
-
-      <div className="py-8 flex justify-end items-center gap-5 w-full">
+        <div className="py-8 flex justify-end items-center gap-5 w-full">
         <div className="flex justify-between items-center gap-4">
           <span className="text-[#4F4F4F]">Showing</span>
           <select
@@ -319,6 +316,7 @@ export default function TasksList() {
             </button>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

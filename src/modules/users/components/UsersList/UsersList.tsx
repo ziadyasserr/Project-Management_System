@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import { BiExpandVertical } from "react-icons/bi";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { BsThreeDotsVertical, BsPencil, BsTrash, BsToggles, BsToggle2Off } from "react-icons/bs";
+import { useEffect, useState } from 'react';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { IoIosSearch } from 'react-icons/io';
+import { toast } from 'react-toastify';
 import {
   axiosInstance,
   USERS_URLS,
-} from "../../../../services/apisUrls/apisUrls";
-import { toast } from "react-toastify";
+} from '../../../../services/apisUrls/apisUrls';
+import Loading from '../../../shared/components/Loading/Loading';
 
 interface Project {
   creationDate: string;
@@ -41,31 +42,48 @@ interface UserResponse {
 export default function UsersList() {
   const [users, setUsers] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(20);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [arrayOfPages, setArrayOfPages] = useState<number[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [nameFilter, setNameFilter] = useState('');
+  const [emailFilter, setEmailFilter] = useState('');
+  const [groupFilter, setGroupFilter] = useState('');
 
-  const allUsers = async (pageNumber: number, pageSize: number) => {
+  const allUsers = async (
+    pageNumber: number,
+    pageSize: number,
+    userName?: string,
+    email?: string,
+    groups?: string,
+  ) => {
     try {
       const response = await axiosInstance.get<UserResponse>(
-        USERS_URLS.GET_UsersUrls,
-        { params: { pageNumber, pageSize } }
+        USERS_URLS.GET_USERS,
+        { params: { pageNumber, pageSize, userName, email, groups } },
       );
       setArrayOfPages(
-        Array.from({ length: response.data.totalNumberOfPages }, (_, i) => i + 1)
+        Array.from(
+          { length: response.data.totalNumberOfPages },
+          (_, i) => i + 1,
+        ),
       );
       setUsers(response.data.data);
       setTotalRecords(response.data.totalNumberOfRecords);
     } catch (error) {
       console.error('Failed to fetch users:', error);
-      toast.error("Failed to fetch users");
+      toast.error('Failed to fetch users');
+    } finally {
+      setLoading(false);
     }
   };
 
   const changeUserStatus = async (id: number) => {
     try {
-      const response = await axiosInstance.put(USERS_URLS.TOGGLE_STATUS_URLS(id));
+      const response = await axiosInstance.put(
+        USERS_URLS.TOGGLE_STATUS_URLS(id),
+      );
       allUsers(pageNumber, pageSize);
       setSelectedId(null); // Hide dropdown after action
     } catch (error) {
@@ -81,10 +99,62 @@ export default function UsersList() {
     allUsers(pageNumber, pageSize);
   }, [pageNumber, pageSize]);
 
+  //filteration
+  const getValueOfName = (input: React.ChangeEvent<HTMLInputElement>) => {
+    setNameFilter(input.target.value);
+    allUsers(1, 10, input.target.value, emailFilter, groupFilter);
+  };
+  const getValueOfEmail = (input: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailFilter(input.target.value);
+    allUsers(1, 10, nameFilter, input.target.value, groupFilter);
+  };
+  const getValueOfGroup = (input: React.ChangeEvent<HTMLInputElement>) => {
+    setGroupFilter(input.target.value);
+    allUsers(1, 10, nameFilter, emailFilter, input.target.value);
+  };
+
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <>
-      <h3 className="text-[#4F4F4F] font-medium text-[28px]">Users</h3>
+      <div className="title shadow-sm px-6 py-4 mb-6">
+        <h3 className="text-[#4F4F4F] font-medium text-2xl">Users</h3>
+      </div>
       <div className="relative overflow-x-auto shadow-xl sm:rounded-lg mt-8">
+        <div className="flex  md:gap-24  gap-0 mb-2  items-center w-full">
+          <div className=" bg-white relative">
+            <input
+              type="search"
+              placeholder="Search By Title"
+              className="shadow-2xl pl-10 py-2 focus:outline-none ml-4 my-5 border-[.7px] rounded-[24px]"
+              onChange={getValueOfName}
+            />
+            <IoIosSearch className="absolute left-8 bottom-8" />
+          </div>
+          <div className=" bg-white relative">
+            <input
+              type="search"
+              placeholder="Search By Email"
+              className="shadow-2xl pl-10 py-2 focus:outline-none ml-4 my-5 border-[.7px] rounded-[24px]"
+              onChange={getValueOfEmail}
+            />
+            <IoIosSearch className="absolute left-8 bottom-8" />
+          </div>
+          <div className=" bg-white relative">
+            <select
+              className="shadow-2xl pl-10 py-2 focus:outline-none ml-4 my-5 border-[.7px] rounded-[24px]"
+              onChange={getValueOfGroup}
+            >
+              <option selected disabled>
+                User Type
+              </option>
+              <option value={1}>group manager</option>
+              <option value={2}>system employee</option>
+            </select>
+            <IoIosSearch className="absolute left-8 bottom-8" />
+          </div>
+        </div>
         <table className="text-sm text-left w-full">
           <thead className="uppercase bg-[#315951E5] text-white">
             <tr>
@@ -94,7 +164,7 @@ export default function UsersList() {
               >
                 <div className="flex items-center gap-6">
                   User Name
-                  <BiExpandVertical className="text-base" />
+                  {/* <BiExpandVertical className="text-base" /> */}
                 </div>
               </th>
               <th
@@ -103,7 +173,7 @@ export default function UsersList() {
               >
                 <div className="flex items-center gap-6">
                   Status
-                  <BiExpandVertical className="text-base" />
+                  {/* <BiExpandVertical className="text-base" /> */}
                 </div>
               </th>
               <th
@@ -112,7 +182,7 @@ export default function UsersList() {
               >
                 <div className="flex items-center gap-6">
                   Phone Number
-                  <BiExpandVertical className="text-base" />
+                  {/* <BiExpandVertical className="text-base" /> */}
                 </div>
               </th>
               <th
@@ -121,7 +191,7 @@ export default function UsersList() {
               >
                 <div className="flex items-center gap-6">
                   Email
-                  <BiExpandVertical className="text-base" />
+                  {/* <BiExpandVertical className="text-base" /> */}
                 </div>
               </th>
               <th
@@ -130,7 +200,7 @@ export default function UsersList() {
               >
                 <div className="flex items-center gap-6">
                   Actions
-                  <BiExpandVertical className="text-base" />
+                  {/* <BiExpandVertical className="text-base" /> */}
                 </div>
               </th>
             </tr>
@@ -147,14 +217,14 @@ export default function UsersList() {
                   </td>
                   <td
                     scope="row"
-                    className="px-6 py-4 font-medium text-[#4F4F4F] whitespace-nowrap"
+                    className="px-6 py-4 font-medium text-[#4F4F4F] "
                   >
                     {user.isActivated ? (
-                      <span className="bg-green-700 px-10 rounded text-[#F5F5F5] p-3">
+                      <span className="bg-green-700  text-[#F5F5F5] block w-24 text-center px-2 py-2 rounded-lg whitespace-nowrap">
                         Active
                       </span>
                     ) : (
-                      <span className="bg-red-700 text-[#F5F5F5] p-3 rounded px-10 w-5">
+                      <span className="bg-red-700 text-[#F5F5F5] block w-24 text-center px-2 py-2 rounded-lg whitespace-nowrap">
                         Not Active
                       </span>
                     )}
@@ -173,15 +243,15 @@ export default function UsersList() {
                   </td>
                   <td className="px-6 py-4 relative">
                     <BsThreeDotsVertical
-                      className="text-black cursor-pointer"
+                      className="text-black cursor-pointer relative"
                       onClick={() => toggleOptions(user.id)}
                     />
                     {selectedId === user.id && (
-                      <div className="absolute bg-white border shadow-lg right-0 mr-2 mt-1 w-24 md:w-30 z-40">
-                        <ul className="space-y-1">
+                      <div className="absolute bg-white border shadow-lg  left-[35px] z-40">
+                        <ul className="">
                           <li>
                             <button
-                              className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"
+                              className="w-full  px-4 py-2 hover:bg-gray-100"
                               onClick={() => changeUserStatus(user.id)}
                             >
                               {user.isActivated ? 'Deactivate' : 'Activate'}
@@ -209,7 +279,9 @@ export default function UsersList() {
               name="pageSize"
               id="pageSizeSelect"
               className="border-[1px] rounded-[24px] p-2"
-              onChange={(event) => setPageSize(parseInt(event.target.value, 10))}
+              onChange={(event) =>
+                setPageSize(parseInt(event.target.value, 10))
+              }
               value={pageSize}
             >
               {[15, 10, 5, 4].map((size) => (
@@ -232,10 +304,12 @@ export default function UsersList() {
                 <FaChevronLeft className="text-[#4F4F4F]" />
               </button>
               <button
-                onClick={() => setPageNumber(Math.min(arrayOfPages.length, pageNumber + 1))}
+                onClick={() =>
+                  setPageNumber(Math.min(arrayOfPages.length, pageNumber + 1))
+                }
                 disabled={pageNumber === arrayOfPages.length}
               >
-                <FaChevronRight className = "text-[#4F4F4F]" />
+                <FaChevronRight className="text-[#4F4F4F]" />
               </button>
             </div>
           </div>

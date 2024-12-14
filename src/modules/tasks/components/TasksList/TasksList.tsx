@@ -38,7 +38,7 @@ export default function TasksList() {
   const [taskId, setTaskId] = useState(0);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [totalRecords, setTotalRecords] = useState<number>(0);
 

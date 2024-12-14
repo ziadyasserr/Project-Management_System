@@ -214,7 +214,7 @@ export default function ProjectsList() {
                 >
                   <div className="flex items-center gap-6">
                     Title
-                    <BiExpandVertical className="text-base" />
+                    {/* <BiExpandVertical className="text-base" /> */}
                   </div>
                 </th>
                 <th
@@ -223,7 +223,7 @@ export default function ProjectsList() {
                 >
                   <div className="flex items-center gap-6">
                     Descripton
-                    <BiExpandVertical className="text-base" />
+                    {/* <BiExpandVertical className="text-base" /> */}
                   </div>
                 </th>
                 <th
@@ -232,7 +232,7 @@ export default function ProjectsList() {
                 >
                   <div className="flex items-center gap-6">
                     Tasks Number
-                    <BiExpandVertical className="text-base" />
+                    {/* <BiExpandVertical className="text-base" /> */}
                   </div>
                 </th>
                 <th
@@ -241,7 +241,7 @@ export default function ProjectsList() {
                 >
                   <div className="flex items-center gap-6">
                     Date Created
-                    <BiExpandVertical className="text-base" />
+                    {/* <BiExpandVertical className="text-base" /> */}
                   </div>
                 </th>
                 {loginData?.userGroup == 'Manager' ? (
@@ -352,10 +352,13 @@ export default function ProjectsList() {
                 ) : (
                   ''
                 )}
-
-                <option value={5} className="text-[#4F4F4F]">
-                  5
-                </option>
+                {totalRecords > 5 ? (
+                  <option value={5} className="text-[#4F4F4F]">
+                    5
+                  </option>
+                ) : (
+                  `${totalRecords}`
+                )}
               </select>
               <span className="text-[#4F4F4F]">of {totalRecords} Results</span>
             </div>
